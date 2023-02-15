@@ -1,0 +1,9 @@
+allowed-origins: "https://angular-template.fly.dev, https://deploy-preview-*--angular-template.fly.dev"
+
+logging:
+    level:
+        org:
+            hibernate: error
+            springframework.core: error
+            springframework.web: error
+        root: error

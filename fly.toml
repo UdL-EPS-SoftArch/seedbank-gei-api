@@ -1,0 +1,22 @@
+app = "seedbank-gei-api"
+
+# [build]
+#   image = "udlepssoftarch/seedbank-gei-api:latest"
+
+[env]
+    JAVA_OPTS = "-XX:MaxRAM=70m"
+    SPRING_PROFILES_ACTIVE = "flyio"
+    SERVER_FORWARD_HEADERS_STRATEGY = "NATIVE"
+
+[[services]]
+    internal_port = 8080
+    protocol = "tcp"
+
+[[services.ports]]
+    force_https = true
+    handlers = ["http"]
+    port = 80
+
+[[services.ports]]
+    handlers = ["tls", "http"]
+    port = "443"
