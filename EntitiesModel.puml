@@ -1,15 +1,42 @@
 @startuml
 
+class UriEntity {
+  uri : String
+}
 class User extends UriEntity implements UserDetails {
   username : String
   password : String
   email : String
 }
-
-class UriEntity {
-  uri : String
+class Admin extends User {
+}
+class Donor extends User {
+}
+class Propagator extends User {
 }
 
-User "1" --right-- "*" Resource : owner <
+Donor "1" -- "*" Donation : by <
+Propagator "1" -- "*" Take : by <
+Propagator "1" -- "*" Request : by <
+
+class Seed {
+  scientificName : String
+  commonName: String[]
+}
+Seed "*" -- "*" Seed : beneficialFor <
+Seed "1" -- "*" Batch : of <
+
+class Batch {
+  amount: Integer
+  weight: Decimal
+  location: String
+  date: ZonedDateTime
+}
+Take --|> Batch
+Donation --|> Batch
+Request --|> Batch
+
+Donation "1" --right-- "0..1" Take : takenBy >
+Request "0..1" --left-- "0..1" Take : fulfilledBy >
 
 @enduml
