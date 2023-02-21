@@ -12,6 +12,8 @@ public class Donation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    //TODO: Uncomment when Donor and Batch are implemented
+
 //    @ManyToOne
 //    @JoinColumn(name = "donor_id")
 //    private Donor donor;
