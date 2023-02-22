@@ -10,6 +10,14 @@ import java.time.ZonedDateTime;
 
 @Entity
 @Data
+class Seed {
+    // FIXME: Remove me when Seed class is implemented
+    @Id
+    private Long id;
+}
+
+@Entity
+@Data
 public class Batch {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
