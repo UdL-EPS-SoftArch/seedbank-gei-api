@@ -8,13 +8,6 @@ import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
-@Entity
-@Data
-class Seed {
-    // FIXME: Remove me when Seed class is implemented
-    @Id
-    private Long id;
-}
 
 @Entity
 @Data
