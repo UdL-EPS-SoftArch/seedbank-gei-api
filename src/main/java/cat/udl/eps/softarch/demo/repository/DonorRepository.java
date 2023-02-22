@@ -5,4 +5,4 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 @RepositoryRestResource
-public interface DonorRepository extends PagingAndSortingRepository<Donor, Integer> {}
+public interface DonorRepository extends PagingAndSortingRepository<Donor, String> {}
