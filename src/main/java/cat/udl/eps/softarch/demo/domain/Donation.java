@@ -20,7 +20,7 @@ class Take { @Id private Long id;}
 @EqualsAndHashCode(callSuper = false)
 public class Donation extends Batch {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @ManyToOne
