@@ -32,7 +32,14 @@ class Batch {
   location: String
   date: ZonedDateTime
 }
-Take --|> Batch
+
+class Take extends Batch {
+    idTake: UUID
+    date: ZonedDateTime
+
+    void findBatchById(UUID batchId)
+    void deleteBatchById(UUID batchId)
+}
 Donation --|> Batch
 Request --|> Batch
 
