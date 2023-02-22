@@ -3,10 +3,7 @@ package cat.udl.eps.softarch.demo.domain;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
@@ -30,5 +27,9 @@ public class Batch {
     @NotBlank
     @Length(min = 2, max = 30)
     private String location;
-    private ZonedDateTime date = ZonedDateTime.now()
+
+    private ZonedDateTime date = ZonedDateTime.now();
+
+    @ManyToOne
+    private Seed of;
 }
