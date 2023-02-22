@@ -20,11 +20,11 @@ public class Batch {
 
 
     @NotNull
-    @Min(value = 1)
+    @Min(value = 1, message = "The minimal amount of a batch should be one")
     private Integer amount;
 
     @NotNull
-    @DecimalMin(value = "0")
+    @DecimalMin(value = "0", message = "The minimal weight should be 0")
     private BigDecimal weight;
     @NotBlank
     @Length(min = 2, max = 30)
