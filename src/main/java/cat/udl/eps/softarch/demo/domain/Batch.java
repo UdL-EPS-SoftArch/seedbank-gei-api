@@ -26,6 +26,7 @@ public class Batch {
     @NotNull
     @DecimalMin(value = "0", message = "The minimal weight should be 0")
     private BigDecimal weight;
+
     @NotBlank
     @Length(min = 2, max = 30)
     private String location;
