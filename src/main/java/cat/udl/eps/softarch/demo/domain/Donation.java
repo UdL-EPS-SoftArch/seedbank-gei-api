@@ -8,7 +8,6 @@ import lombok.EqualsAndHashCode;
 import javax.persistence.*;
 
 
-//TODO: Import Batch and Take class when implemented
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = false)
