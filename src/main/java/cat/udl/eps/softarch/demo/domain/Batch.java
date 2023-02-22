@@ -31,6 +31,6 @@ public class Batch {
 
     private ZonedDateTime date = ZonedDateTime.now();
 
-    @ManyToOne
-    private Seed of;
+    // @ManyToOne
+    // private Seed of;
 }
