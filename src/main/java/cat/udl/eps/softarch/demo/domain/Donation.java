@@ -7,18 +7,17 @@ import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 
-//TODO: Delete this classes and use the ones in the domain package when implemented
 class Batch {}
-@Entity
-class Donor { @Id private Long id;}
-@Entity
-class Take { @Id private Long id;}
-
 
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class Donation extends Batch {
+    //TODO: Delete this classes and use the ones in the domain package when implemented
+    @Entity
+    class Donor { @Id private Long id;}
+    @Entity
+    class Take { @Id private Long id;}
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
