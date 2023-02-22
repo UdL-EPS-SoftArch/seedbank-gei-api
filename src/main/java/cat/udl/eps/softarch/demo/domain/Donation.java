@@ -1,37 +1,30 @@
 package cat.udl.eps.softarch.demo.domain;
 
 
-import lombok.Getter;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
-@Getter
-public class Donation {
+@Data
+@EqualsAndHashCode(callSuper = false)
+public class Donation extends Batch {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //TODO: Uncomment when Donor and Batch are implemented
+    @ManyToOne
+    @JsonIdentityReference(alwaysAsId = true)
+    private Donor donor;
 
-//    @ManyToOne
-//    @JoinColumn(name = "donor_id")
-//    private Donor donor;
-//
-//    @ManyToOne
-//    @JoinColumn(name = "batch_id")
-//    private Batch batch;
-//
-//    public Donation(Donor donor, Batch batch) {
-//        this.donor = donor;
-//        this.batch = batch;
-//    }
+    @OneToOne
+    @JsonIdentityReference(alwaysAsId = true)
+    private Take takenBy;
 
-    public Long getId() {
-        return id;
+    public Donation(Donor donor, Take takenBy) {
+        this.donor = donor;
+        this.takenBy = takenBy;
     }
-
 }
