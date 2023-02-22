@@ -33,6 +33,8 @@ class Batch {
   date: ZonedDateTime
 }
 
+Take --|> Batch
+
 class Take extends Batch {
     idTake: UUID
     date: ZonedDateTime
