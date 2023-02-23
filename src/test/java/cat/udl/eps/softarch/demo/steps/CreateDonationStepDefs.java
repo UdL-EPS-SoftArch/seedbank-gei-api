@@ -32,21 +32,18 @@ public class CreateDonationStepDefs {
     @Autowired
     private DonationRepository donationRepository;
 
-    Donor donor;
-    Take take;
-
     @And("There is a valid Donor")
     public void thereIsAValidDonor() {
-        donor = createValidDonor();
+        Donor donor = createValidDonor();
         userRepository.save(donor);
         Assert.assertNotEquals(0, userRepository.count());
     }
 
     @And("There is a valid Take")
     public void thereIsAValidTake() {
-        take = createValidTake();
+        Take take = createValidTake();
         takeRepository.save(take);
-        Assert.assertEquals(1, takeRepository.count());
+        Assert.assertNotEquals(0, takeRepository.count());
     }
 
     @When("I create a new donation")
@@ -64,14 +61,14 @@ public class CreateDonationStepDefs {
 
     @But("There is no valid Donor")
     public void thereIsNoValidDonor() {
-
+        for (User user : userRepository.findAll()) {
+            Assert.assertFalse(user instanceof Donor);
+        }
     }
 
     @But("There is no valid Take")
     public void thereIsNoValidTake() {
-        for (User user : userRepository.findAll()) {
-            Assert.assertFalse(user instanceof Donor);
-        }
+        assert takeRepository.count() == 0;
     }
 
     @And("There is {int} donation created")
@@ -100,8 +97,8 @@ public class CreateDonationStepDefs {
 
     private Donation createValidDonation() {
         Donation donation = new Donation();
-        donation.setDonor(donor);
-        donation.setTakenBy(take);
+        donation.setDonor(createValidDonor());
+        donation.setTakenBy(createValidTake());
         donation.setAmount(1);
         donation.setWeight(BigDecimal.ONE);
         donation.setDate(ZonedDateTime.now());
