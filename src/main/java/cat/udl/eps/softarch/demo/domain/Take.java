@@ -1,6 +1,8 @@
 package cat.udl.eps.softarch.demo.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -9,14 +11,8 @@ import javax.validation.constraints.NotBlank;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
-public class Take /*extends Batch */{
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
-
-    @NotBlank
-    private ZonedDateTime date;
-
+public class Take extends Batch {
 }
