@@ -5,7 +5,7 @@ Feature: Create a Donation
 
   Scenario: Create a new Donation
     Given I can login with username "user" and password "password"
-    And The repsonse code is 200
+    And The response code is 200
     And There is a valid Donor
     And There is a valid Take
     When I create a new donation
