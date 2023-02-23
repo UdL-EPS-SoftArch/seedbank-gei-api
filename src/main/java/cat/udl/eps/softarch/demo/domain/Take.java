@@ -1,6 +1,8 @@
 package cat.udl.eps.softarch.demo.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,7 +13,8 @@ import java.util.UUID;
 
 @Entity
 @Data
-public class Take /*extends Batch */{
+@EqualsAndHashCode(callSuper = true)
+public class Take extends Batch {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
