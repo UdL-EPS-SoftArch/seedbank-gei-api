@@ -6,10 +6,14 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 
 import io.cucumber.java.en.When;
+import org.json.JSONObject;
 import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 
 import java.time.ZonedDateTime;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 public class CreateTakeStepDefs {
     @Autowired
@@ -24,10 +28,15 @@ public class CreateTakeStepDefs {
     }
 
     @When("^I create a new Take")
-    public void iCreateANewTake(){
+    public void iCreateANewTake() throws Throwable {
         Take take = new Take();
         take.setDate(ZonedDateTime.now());
-        this.takeRepository.save(take);
+        stepDefs.result = stepDefs.mockMvc.perform(
+                        post("/takes")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(String.valueOf(new JSONObject(stepDefs.mapper.writeValueAsString(take)))
+                                )
+                        );
     }
 
     @And("^Take has been created with id (\\d+)$")
