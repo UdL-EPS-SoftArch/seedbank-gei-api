@@ -46,7 +46,7 @@ public class CreateDonationStepDefs {
         Assert.assertNotEquals(0, takeRepository.count());
     }
 
-    @When("I create a new donation")
+    @When("I create a new valid donation")
     public void createDonation() throws Exception {
         Donation donation = createValidDonation();
 
@@ -76,6 +76,20 @@ public class CreateDonationStepDefs {
         Assert.assertEquals(numDonations, donationRepository.count());
     }
 
+    @When("I create a new donation without a donor")
+    public void createDonationWithoutDonor() throws Exception {
+        Donation donation = donationWithoutDonor();
+        donation.setDonor(null);
+
+        stepDefs.result = stepDefs.mockMvc.perform(
+                post("/donations")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(stepDefs.mapper.writeValueAsString(donation))
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(AuthenticationStepDefs.authenticate()))
+                .andDo(print());
+    }
+
 
     private Donor createValidDonor() {
         Donor donor = new Donor();
@@ -99,6 +113,26 @@ public class CreateDonationStepDefs {
         Donation donation = new Donation();
         donation.setDonor(createValidDonor());
         donation.setTakenBy(createValidTake());
+        donation.setAmount(1);
+        donation.setWeight(BigDecimal.ONE);
+        donation.setDate(ZonedDateTime.now());
+        return donation;
+    }
+
+    private Donation donationWithoutDonor() {
+        Donation donation = new Donation();
+        donation.setDonor(null);
+        donation.setTakenBy(createValidTake());
+        donation.setAmount(1);
+        donation.setWeight(BigDecimal.ONE);
+        donation.setDate(ZonedDateTime.now());
+        return donation;
+    }
+
+    private Donation donationWithoutTake() {
+        Donation donation = new Donation();
+        donation.setDonor(createValidDonor());
+        donation.setTakenBy(null);
         donation.setAmount(1);
         donation.setWeight(BigDecimal.ONE);
         donation.setDate(ZonedDateTime.now());

@@ -11,7 +11,7 @@ Feature: Create a Donation
     And The response code is 200
     And There is a valid Donor
     And There is a valid Take
-    When I create a new donation
+    When I create a new valid donation
     Then The response code is 201
     And There is 1 donation created
 
@@ -19,7 +19,7 @@ Feature: Create a Donation
     Given I'm not logged in
     And There is a valid Donor
     And There is a valid Take
-    When I create a new donation
+    When I create a new valid donation
     Then The response code is 401
     And There is 0 donation created
 
@@ -28,7 +28,7 @@ Feature: Create a Donation
     And The response code is 200
     And There is a valid Take
     But There is no valid Donor
-    When I create a new donation
+    When I create a new donation without a donor
     Then The response code is 400
 
   Scenario: Create a new Donation without a take
@@ -36,6 +36,6 @@ Feature: Create a Donation
     And The response code is 200
     And There is a valid Donor
     But There is no valid Take
-    When I create a new donation
+    When I create a new donation without a take
     Then The response code is 400
 
