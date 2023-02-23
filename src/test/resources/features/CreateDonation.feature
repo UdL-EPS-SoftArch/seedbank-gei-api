@@ -3,6 +3,9 @@ Feature: Create a Donation
   As a Donor
   I want to be able to create a donation
 
+  Background:
+    Given There is a registered user with username "user" and password "password" and email "user@sample.app"
+
   Scenario: Create a new Donation
     Given I can login with username "user" and password "password"
     And The response code is 200
