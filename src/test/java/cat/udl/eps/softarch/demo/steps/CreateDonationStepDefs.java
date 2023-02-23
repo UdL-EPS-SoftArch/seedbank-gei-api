@@ -58,8 +58,12 @@ public class CreateDonationStepDefs {
                         .accept(MediaType.APPLICATION_JSON)
                         .with(AuthenticationStepDefs.authenticate()))
                 .andDo(print());
+    }
 
-        Assert.assertEquals(1, donationRepository.count());
+
+    @And("There is {int} donation created")
+    public void thereIsDonationCreated(int numDonations) {
+        Assert.assertEquals(numDonations, donationRepository.count());
     }
 
 

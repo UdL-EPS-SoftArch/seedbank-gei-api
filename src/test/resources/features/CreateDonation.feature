@@ -13,6 +13,7 @@ Feature: Create a Donation
     And There is a valid Take
     When I create a new donation
     Then The response code is 201
+    And There is 1 donation created
 
   Scenario: Create a new Donation without being logged in
     Given I'm not logged in
@@ -20,7 +21,7 @@ Feature: Create a Donation
     And There is a valid Take
     When I create a new donation
     Then The response code is 401
-    And There is no new donation
+    And There is 0 donation created
 
   Scenario: Create a new Donation without a donor
     Given I can login with username "user" and password "password"
