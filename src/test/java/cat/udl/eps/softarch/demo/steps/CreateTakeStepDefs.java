@@ -2,6 +2,7 @@ package cat.udl.eps.softarch.demo.steps;
 
 import cat.udl.eps.softarch.demo.domain.Take;
 import cat.udl.eps.softarch.demo.repository.TakeRepository;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 
 import io.cucumber.java.en.When;
@@ -27,5 +28,10 @@ public class CreateTakeStepDefs {
         Take take = new Take();
         take.setDate(ZonedDateTime.now());
         this.takeRepository.save(take);
+    }
+
+    @And("^Take has been created with id (\\d+)$")
+    public void takeHasBeenCreated(Integer id){
+        Assert.assertTrue(this.takeRepository.existsById(id));
     }
 }

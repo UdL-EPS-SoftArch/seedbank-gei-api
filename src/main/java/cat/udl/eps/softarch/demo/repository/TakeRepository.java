@@ -10,4 +10,5 @@ public interface TakeRepository extends PagingAndSortingRepository<Take, String>
     Take findTakeFulfilledByBatchId(@Param("id") Integer batchId);
     Take findTakeTakenByBatchId(@Param("id") Integer batchId);
     Take findById(@Param("id") Integer takeId);
+    Boolean existsById(@Param("id") Integer takeId);
 }
