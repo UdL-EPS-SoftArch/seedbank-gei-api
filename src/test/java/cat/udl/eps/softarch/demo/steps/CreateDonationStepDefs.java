@@ -3,10 +3,12 @@ package cat.udl.eps.softarch.demo.steps;
 import cat.udl.eps.softarch.demo.domain.Donation;
 import cat.udl.eps.softarch.demo.domain.Donor;
 import cat.udl.eps.softarch.demo.domain.Take;
+import cat.udl.eps.softarch.demo.domain.User;
 import cat.udl.eps.softarch.demo.repository.DonationRepository;
 import cat.udl.eps.softarch.demo.repository.TakeRepository;
 import cat.udl.eps.softarch.demo.repository.UserRepository;
 import io.cucumber.java.en.And;
+import io.cucumber.java.en.But;
 import io.cucumber.java.en.When;
 import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +62,17 @@ public class CreateDonationStepDefs {
                 .andDo(print());
     }
 
+    @But("There is no valid Donor")
+    public void thereIsNoValidDonor() {
+
+    }
+
+    @But("There is no valid Take")
+    public void thereIsNoValidTake() {
+        for (User user : userRepository.findAll()) {
+            Assert.assertFalse(user instanceof Donor);
+        }
+    }
 
     @And("There is {int} donation created")
     public void thereIsDonationCreated(int numDonations) {

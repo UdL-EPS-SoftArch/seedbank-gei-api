@@ -25,7 +25,7 @@ Feature: Create a Donation
 
   Scenario: Create a new Donation without a donor
     Given I can login with username "user" and password "password"
-    And The repsonse code is 200
+    And The response code is 200
     And There is a valid Take
     But There is no valid Donor
     When I create a new donation
@@ -33,7 +33,7 @@ Feature: Create a Donation
 
   Scenario: Create a new Donation without a take
     Given I can login with username "user" and password "password"
-    And The repsonse code is 200
+    And The response code is 200
     And There is a valid Donor
     But There is no valid Take
     When I create a new donation
