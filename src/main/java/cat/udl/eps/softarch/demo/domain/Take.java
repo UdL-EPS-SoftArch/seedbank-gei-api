@@ -14,10 +14,7 @@ import java.time.ZonedDateTime;
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class Take extends Batch implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer takeId;
+public class Take extends Batch {
     @NotBlank
     private ZonedDateTime date;
 

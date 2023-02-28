@@ -23,7 +23,7 @@ public class CreateTakeStepDefs {
     private TakeRepository takeRepository;
 
     @Given("^There is no Take available with id (\\d+)$")
-    public void thereIsNoTakeAvailableWithId(Integer id) {
+    public void thereIsNoTakeAvailableWithId(Long id) {
         Assert.assertNull(this.takeRepository.findById(id));
     }
 
@@ -34,13 +34,12 @@ public class CreateTakeStepDefs {
         stepDefs.result = stepDefs.mockMvc.perform(
                         post("/takes")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(String.valueOf(new JSONObject(stepDefs.mapper.writeValueAsString(take)))
-                                )
+                                .content(stepDefs.mapper.writeValueAsString(take))
                         );
     }
 
     @And("^Take has been created with id (\\d+)$")
-    public void takeHasBeenCreated(Integer id){
+    public void takeHasBeenCreated(Long id){
         Assert.assertTrue(this.takeRepository.existsById(id));
     }
 }
