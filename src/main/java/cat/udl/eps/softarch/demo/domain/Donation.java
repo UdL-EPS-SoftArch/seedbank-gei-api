@@ -3,6 +3,7 @@ package cat.udl.eps.softarch.demo.domain;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -18,7 +19,6 @@ public class Donation extends Batch {
     private Donor donor;
 
     @OneToOne
-    @NotNull
     @JsonIdentityReference(alwaysAsId = true)
     private Take takenBy;
 }

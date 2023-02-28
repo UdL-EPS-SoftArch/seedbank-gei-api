@@ -27,15 +27,17 @@ Feature: Create a Donation
     Given I can login with username "user" and password "password"
     And The response code is 200
     And There is a valid Take
-    But There is no valid Donor
+    But There is no Donor
     When I create a new donation without a donor
     Then The response code is 400
+    And There is 0 donation created
 
   Scenario: Create a new Donation without a take
     Given I can login with username "user" and password "password"
     And The response code is 200
     And There is a valid Donor
-    But There is no valid Take
+    But There is no Take
     When I create a new donation without a take
-    Then The response code is 400
+    Then The response code is 201
+    And There is 1 donation created
 

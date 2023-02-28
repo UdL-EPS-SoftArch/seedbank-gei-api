@@ -59,14 +59,14 @@ public class CreateDonationStepDefs {
                 .andDo(print());
     }
 
-    @But("There is no valid Donor")
+    @But("There is no Donor")
     public void thereIsNoValidDonor() {
         for (User user : userRepository.findAll()) {
             Assert.assertFalse(user instanceof Donor);
         }
     }
 
-    @But("There is no valid Take")
+    @But("There is no Take")
     public void thereIsNoValidTake() {
         assert takeRepository.count() == 0;
     }
@@ -86,7 +86,23 @@ public class CreateDonationStepDefs {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(stepDefs.mapper.writeValueAsString(donation))
                         .accept(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
                         .with(AuthenticationStepDefs.authenticate()))
+                .andDo(print());
+    }
+
+    @When("I create a new donation without a take")
+    public void createDonationWithoutTake() throws Exception {
+        Donation donation = donationWithoutTake();
+        donation.setTakenBy(null);
+
+        stepDefs.result = stepDefs.mockMvc.perform(
+                        post("/donations")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(stepDefs.mapper.writeValueAsString(donation))
+                                .accept(MediaType.APPLICATION_JSON)
+                                .characterEncoding("utf-8")
+                                .with(AuthenticationStepDefs.authenticate()))
                 .andDo(print());
     }
 
@@ -125,6 +141,7 @@ public class CreateDonationStepDefs {
         donation.setTakenBy(createValidTake());
         donation.setAmount(1);
         donation.setWeight(BigDecimal.ONE);
+        donation.setLocation("Barcelona");
         donation.setDate(ZonedDateTime.now());
         return donation;
     }
@@ -135,6 +152,7 @@ public class CreateDonationStepDefs {
         donation.setTakenBy(null);
         donation.setAmount(1);
         donation.setWeight(BigDecimal.ONE);
+        donation.setLocation("Barcelona");
         donation.setDate(ZonedDateTime.now());
         return donation;
     }
