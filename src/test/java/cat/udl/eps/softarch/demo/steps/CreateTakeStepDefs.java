@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
 import java.time.ZonedDateTime;
+import java.util.Optional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
@@ -24,7 +25,7 @@ public class CreateTakeStepDefs {
 
     @Given("^There is no Take available with id (\\d+)$")
     public void thereIsNoTakeAvailableWithId(Long id) {
-        Assert.assertNull(this.takeRepository.findById(id));
+        Assert.assertEquals("No take with this id", this.takeRepository.findById(id), Optional.empty());
     }
 
     @When("^I create a new Take")
