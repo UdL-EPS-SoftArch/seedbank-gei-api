@@ -6,7 +6,6 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 
 import io.cucumber.java.en.When;
-import org.json.JSONObject;
 import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -41,6 +40,6 @@ public class CreateTakeStepDefs {
 
     @And("^Take has been created with id (\\d+)$")
     public void takeHasBeenCreated(Long id){
-        Assert.assertTrue(this.takeRepository.existsById(id));
+        Assert.assertNotEquals("Now take exists",this.takeRepository.existsById(id), Optional.empty());
     }
 }
