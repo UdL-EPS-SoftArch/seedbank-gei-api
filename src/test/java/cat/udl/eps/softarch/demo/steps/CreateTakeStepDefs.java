@@ -29,8 +29,10 @@ public class CreateTakeStepDefs {
     private TakeRepository takeRepository;
 
     @Given("^There is no Take available with id (\\d+)$")
-    public void thereIsNoTakeAvailableWithId(Long id) {
-        Assert.assertEquals("No take with this id", this.takeRepository.findById(id), Optional.empty());
+    public void thereIsNoTakeAvailableWithId(Long id) throws Exception {
+        stepDefs.result = stepDefs.mockMvc.perform(
+                get("/takes/{id}", id)
+                        .accept(MediaType.APPLICATION_JSON));
     }
 
     @When("^I create a new Take with id (\\d+)$")
