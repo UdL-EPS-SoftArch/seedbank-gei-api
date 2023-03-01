@@ -10,6 +10,7 @@ import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
+import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.Optional;
 
@@ -30,12 +31,16 @@ public class CreateTakeStepDefs {
     @When("^I create a new Take")
     public void iCreateANewTake() throws Throwable {
         Take take = new Take();
-        take.setDate(ZonedDateTime.now());
+        take.setTakeDate(ZonedDateTime.now());
+        take.setAmount(5);
+        take.setWeight(new BigDecimal("5"));
+        take.setLocation("Lleida");
+
         stepDefs.result = stepDefs.mockMvc.perform(
-                        post("/takes")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(stepDefs.mapper.writeValueAsString(take))
-                        );
+                post("/takes")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(stepDefs.mapper.writeValueAsString(take))
+        );
     }
 
     @And("^Take has been created with id (\\d+)$")
