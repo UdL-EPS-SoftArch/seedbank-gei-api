@@ -32,8 +32,8 @@ public class CreateTakeStepDefs {
         Assert.assertEquals("No take with this id", this.takeRepository.findById(id), Optional.empty());
     }
 
-    @When("^I create a new Take")
-    public void iCreateANewTake() throws Throwable {
+    @When("^I create a new Take with id (\\d+)$")
+    public void iCreateANewTake(Long id) throws Throwable {
         Take take = new Take();
         take.setTakeDate(ZonedDateTime.now());
         take.setAmount(5);
