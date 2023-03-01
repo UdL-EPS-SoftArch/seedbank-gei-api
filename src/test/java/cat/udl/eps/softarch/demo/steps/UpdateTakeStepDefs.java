@@ -24,27 +24,6 @@ public class UpdateTakeStepDefs {
     @Autowired
     private TakeRepository takeRepository;
 
-
-    @Given("There is a Take available with id {long}")
-    public void thereIsATakeAvailableWithId(long id) throws Exception {
-        Take take = new Take();
-        take.setTakeDate(ZonedDateTime.now());
-        take.setId(id);
-        take.setAmount(5);
-        take.setWeight(new BigDecimal("5"));
-        take.setLocation("Lleida");
-
-        stepDefs.mockMvc.perform(
-                post("/takes")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(stepDefs.mapper.writeValueAsString(take)));
-
-
-        stepDefs.result = stepDefs.mockMvc.perform(
-                get("/takes/{id}", id)
-                        .accept(MediaType.APPLICATION_JSON));
-    }
-
     @When("I update the Take with id {long}")
     public void iUpdateTheTake(long id)  throws Exception{
         Take take = new Take();

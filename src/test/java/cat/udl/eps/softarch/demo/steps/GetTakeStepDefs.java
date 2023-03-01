@@ -21,22 +21,6 @@ public class GetTakeStepDefs {
     @Autowired
     private TakeRepository takeRepository;
 
-    @When("^There is Take available with id (\\d+)$")
-    public void thereIsTakeAvailableWithId1(Long id) throws Throwable {
-        Take take = new Take();
-        take.setTakeDate(ZonedDateTime.now());
-        take.setId(id);
-        take.setAmount(5);
-        take.setWeight(new BigDecimal("5"));
-        take.setLocation("Lleida");
-
-        stepDefs.result = stepDefs.mockMvc.perform(
-                post("/takes")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(stepDefs.mapper.writeValueAsString(take))
-        );
-    }
-
     @And("^I get a new Take with id (\\d+)$")
     public void takeHasBeenCreated(Long id) throws Exception {
         stepDefs.result = stepDefs.mockMvc.perform(
