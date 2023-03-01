@@ -5,16 +5,15 @@ import cat.udl.eps.softarch.demo.repository.TakeRepository;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
-import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
-import java.util.Optional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 
 public class DeleteTakeStepDefs {
     @Autowired
@@ -22,10 +21,10 @@ public class DeleteTakeStepDefs {
 
     @Autowired
     private TakeRepository takeRepository;
-    private void createNewTake() throws Throwable {
+    private void createNewTake(Long id) throws Throwable {
         Take take = new Take();
         take.setTakeDate(ZonedDateTime.now());
-        take.setId(1);
+        take.setId(id);
         take.setAmount(5);
         take.setWeight(new BigDecimal("5"));
         take.setLocation("Lleida");
@@ -39,14 +38,16 @@ public class DeleteTakeStepDefs {
 
     @Given("^There is Take available with id (\\d+)$")
     public void thereIsTakeAvailableWithId(Long id) throws Throwable {
-        createNewTake();
-        Assert.assertEquals("Take with this id", this.takeRepository.findById(id), Optional.empty());
+        createNewTake(id);
+        stepDefs.result = stepDefs.mockMvc.perform(
+                get("/takes/{id}", id)
+                        .accept(MediaType.APPLICATION_JSON));
     }
 
     @When("^I delete Take with id (\\d+)$")
     public void iDeleteATake(Long id) throws Throwable {
         stepDefs.result = stepDefs.mockMvc.perform(
-                post("/takes/{id}", id)
+                delete("/takes/{id}", id)
                         .accept(MediaType.APPLICATION_JSON)
         );
     }
