@@ -3,6 +3,7 @@ package cat.udl.eps.softarch.demo.steps;
 import cat.udl.eps.softarch.demo.domain.Take;
 import cat.udl.eps.softarch.demo.repository.TakeRepository;
 import io.cucumber.java.en.Given;
+import io.cucumber.java.en.When;
 import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -35,7 +36,16 @@ public class DeleteTakeStepDefs {
     }
 
     @Given("^There is Take available with id (\\d+)$")
-    public void thereIsTakeAvailableWithId(Long id) {
+    public void thereIsTakeAvailableWithId(Long id) throws Throwable {
+        createNewTake();
         Assert.assertEquals("Take with this id", this.takeRepository.findById(id), Optional.empty());
+    }
+
+    @When("^I delete Take with id (\\d+)$")
+    public void iDeleteATake(Long id) throws Throwable {
+        stepDefs.result = stepDefs.mockMvc.perform(
+                post("/takes/{id}", id)
+                        .accept(MediaType.APPLICATION_JSON)
+        );
     }
 }
