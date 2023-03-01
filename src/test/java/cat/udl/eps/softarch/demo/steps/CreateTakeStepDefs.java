@@ -14,7 +14,11 @@ import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.Optional;
 
+import static org.hamcrest.Matchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 public class CreateTakeStepDefs {
     @Autowired
@@ -44,7 +48,9 @@ public class CreateTakeStepDefs {
     }
 
     @And("^Take has been created with id (\\d+)$")
-    public void takeHasBeenCreated(Long id){
-        Assert.assertNotEquals("Now take exists",this.takeRepository.existsById(id), Optional.empty());
+    public void takeHasBeenCreated(Long id) throws Exception {
+        stepDefs.result = stepDefs.mockMvc.perform(
+                        get("/takes/{id}", id)
+                                .accept(MediaType.APPLICATION_JSON));
     }
 }
