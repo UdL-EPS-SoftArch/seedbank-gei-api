@@ -7,5 +7,5 @@ I want to delete a Take
     Then The response code is 200
     When I delete Take with id 1
     Then The response code is 202
-    And Take with id 1 has been deleted
+    And Take has been deleted with id 1
     And The response code is 200

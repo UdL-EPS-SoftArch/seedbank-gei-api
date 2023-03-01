@@ -2,6 +2,7 @@ package cat.udl.eps.softarch.demo.steps;
 
 import cat.udl.eps.softarch.demo.domain.Take;
 import cat.udl.eps.softarch.demo.repository.TakeRepository;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import org.junit.Assert;
@@ -12,6 +13,7 @@ import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.Optional;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 public class DeleteTakeStepDefs {
@@ -47,5 +49,11 @@ public class DeleteTakeStepDefs {
                 post("/takes/{id}", id)
                         .accept(MediaType.APPLICATION_JSON)
         );
+    }
+    @And("^Take has been deleted with id (\\d+)$")
+    public void takeHasBeenDeleted(Long id) throws Exception {
+        stepDefs.result = stepDefs.mockMvc.perform(
+                get("/takes/{id}", id)
+                        .accept(MediaType.APPLICATION_JSON));
     }
 }
