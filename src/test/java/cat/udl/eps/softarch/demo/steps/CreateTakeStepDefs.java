@@ -10,6 +10,7 @@ import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.Optional;
