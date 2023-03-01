@@ -1,7 +1,6 @@
 package cat.udl.eps.softarch.demo.steps;
 
 import cat.udl.eps.softarch.demo.domain.Take;
-import cat.udl.eps.softarch.demo.repository.TakeRepository;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
@@ -18,9 +17,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 public class DeleteTakeStepDefs {
     @Autowired
     private StepDefs stepDefs;
-
-    @Autowired
-    private TakeRepository takeRepository;
     private void createNewTake(Long id) throws Throwable {
         Take take = new Take();
         take.setTakeDate(ZonedDateTime.now());
@@ -35,7 +31,6 @@ public class DeleteTakeStepDefs {
                         .content(stepDefs.mapper.writeValueAsString(take))
         );
     }
-
     @Given("^There is Take available with id (\\d+)$")
     public void thereIsTakeAvailableWithId(Long id) throws Throwable {
         createNewTake(id);
