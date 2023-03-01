@@ -36,6 +36,7 @@ public class CreateTakeStepDefs {
     public void iCreateANewTake(Long id) throws Throwable {
         Take take = new Take();
         take.setTakeDate(ZonedDateTime.now());
+        take.setId(id);
         take.setAmount(5);
         take.setWeight(new BigDecimal("5"));
         take.setLocation("Lleida");
