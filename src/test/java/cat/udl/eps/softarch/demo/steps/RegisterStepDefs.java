@@ -7,8 +7,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import cat.udl.eps.softarch.demo.domain.Donor;
 import cat.udl.eps.softarch.demo.domain.User;
 import cat.udl.eps.softarch.demo.mothers.DonorMother;
+import cat.udl.eps.softarch.demo.mothers.UserMother;
 import cat.udl.eps.softarch.demo.repository.DonorRepository;
 import cat.udl.eps.softarch.demo.repository.UserRepository;
 import io.cucumber.java.en.And;
@@ -17,7 +19,12 @@ import io.cucumber.java.en.When;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Persistable;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.http.MediaType;
+
+import java.util.Objects;
+import java.util.function.Supplier;
 
 public class RegisterStepDefs {
 
@@ -39,14 +46,12 @@ public class RegisterStepDefs {
 
   @Given("^There is a registered user with username \"([^\"]*)\" and password \"([^\"]*)\" and email \"([^\"]*)\"$")
   public void thereIsARegisteredUserWithUsernameAndPasswordAndEmail(String username, String password, String email) {
-    if (!userRepository.existsById(username)) {
-      User user = new User();
-      user.setEmail(email);
-      user.setUsername(username);
-      user.setPassword(password);
-      user.encodePassword();
-      userRepository.save(user);
-    }
+    registerUser(() -> UserMother.getUserWithEncodingPassword(username, password, email));
+  }
+
+  @Given("^There is a valid registered user with username \"([^\"]*)\"")
+  public void thereIsAValidRegisteredUserWithUserName(String username) {
+    registerUser(() -> UserMother.getUserWithEncodingPassword(username));
   }
 
   @And("^I can login with username \"([^\"]*)\" and password \"([^\"]*)\"$")
@@ -54,6 +59,7 @@ public class RegisterStepDefs {
     AuthenticationStepDefs.currentUsername = username;
     AuthenticationStepDefs.currentPassword = password;
 
+    var users = userRepository.findAll();
     stepDefs.result = stepDefs.mockMvc.perform(
         get("/identity", username)
             .accept(MediaType.APPLICATION_JSON)
@@ -77,20 +83,14 @@ public class RegisterStepDefs {
 
   @When("^I register a new user with username \"([^\"]*)\", email \"([^\"]*)\" and password \"([^\"]*)\"$")
   public void iRegisterANewUserWithUsernameEmailAndPassword(String username, String email, String password) throws Throwable {
-    User user = new User();
-    user.setUsername(username);
-    user.setEmail(email);
-
-    stepDefs.result = stepDefs.mockMvc.perform(
-            post("/users")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(new JSONObject(
-                            stepDefs.mapper.writeValueAsString(user)
-                    ).put("password", password).toString())
-                    .accept(MediaType.APPLICATION_JSON)
-                    .with(AuthenticationStepDefs.authenticate()))
-            .andDo(print());
+    registerUserViaApi(() -> UserMother.getUser(username, password, email));
   }
+
+  @When("^I register a new valid user with username \"([^\"]*)\"")
+  public void iRegisterANewUserWithUsernameEmailAndPassword(String username) throws Throwable {
+    registerUserViaApi(() -> UserMother.getUser(username));
+  }
+
 
   @And("^It has been created a user with username \"([^\"]*)\" and email \"([^\"]*)\", the password is not returned$")
   public void itHasBeenCreatedAUserWithUsername(String username, String email) throws Throwable {
@@ -122,21 +122,42 @@ public class RegisterStepDefs {
 
   @Given("^There is a registered donor with username \"([^\"]*)\" and password \"([^\"]*)\" and email \"([^\"]*)\"$")
   public void thereIsARegisteredDonorWithUsernameAndPasswordAndEmail(String username, String password, String email) {
-    if (!donorRepository.existsById(username)) {
-      var donor = DonorMother.getValidDonorWith(username, password, email);
-      donorRepository.save(donor);
-    }
+    registerDonor(() -> DonorMother.getValidDonorWith(username, password, email));
+  }
+
+
+  @Given("^There is a valid registered donor with username \"([^\"]*)\"")
+  public void registerValidDonorWithUserName(String username) {
+    registerDonor(() -> DonorMother.getValidDonorWith(username));
   }
 
   @When("^I register a new donor with username \"([^\"]*)\", email \"([^\"]*)\" and password \"([^\"]*)\"$")
   public void iRegisterANewDonorWithUsernameEmailAndPassword(String username, String email, String password) throws Throwable {
-    var donor = DonorMother.getValidDonorWith(username, password, email);
+    registerUserViaApi(() -> DonorMother.getValidDonorWith(username, password, email));
+  }
+
+
+  private void registerUser(Supplier<User> userGenerator) {
+    register(userGenerator.get(), userRepository);
+  }
+
+  private void registerDonor(Supplier<Donor> donorGenerator) {
+    register(donorGenerator.get(), donorRepository);
+  }
+
+  private <T extends Persistable<ID>, ID> void register(T value, CrudRepository<T, ID> repo) {
+    if (!repo.existsById(Objects.requireNonNull(value.getId())))
+      repo.save(value);
+  }
+
+  private void registerUserViaApi(Supplier<User> userGenerator) throws Exception {
+    var user = userGenerator.get();
     stepDefs.result = stepDefs.mockMvc.perform(
                     post("/users")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(new JSONObject(
-                                    stepDefs.mapper.writeValueAsString(donor)
-                            ).put("password", password).toString())
+                                    stepDefs.mapper.writeValueAsString(user)
+                            ).put("password", user.getPassword()).toString())
                             .accept(MediaType.APPLICATION_JSON)
                             .with(AuthenticationStepDefs.authenticate()))
             .andDo(print());
