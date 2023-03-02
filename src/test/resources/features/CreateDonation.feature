@@ -9,35 +9,35 @@ Feature: Create a Donation
   Scenario: Create a new Donation
     Given I can login with username "user" and password "password"
     And The response code is 200
-    And User "user" is a donor
-    And A take action exists
-    When The donor can create a donation from the take action
+    And User "user" is the donor
+    And A valid take action exists
+    When The donor creates a donation from the take action
     Then The response code is 201
     And There is 1 donation created
 
-#  Scenario: Create a new Donation without being logged in
-#    Given I'm not logged in
-#    And There is a valid Donor with name "donor"
-#    And There is a valid Take with identifier 1
-#    When I create a new valid donation with id: 1 from donor "donor" and take 1
-#    Then The response code is 401
-#    And There is 0 donation created
+  Scenario: Create a new Donation without being logged in
+    Given I'm not logged in
+    And User "user" is the donor
+    And A valid take action exists
+    When The donor creates a donation from the take action
+    Then The response code is 401
+    And There is 0 donation created
 
   Scenario: Create a new Donation without a donor
     Given I can login with username "user" and password "password"
     And The response code is 200
-    And A take action exists
+    And A valid take action exists
     But There is no Donor
-    When I create a new donation with the take action
+    When The donor creates a donation from the take action
     Then The response code is 400
     And There is 0 donation created
 
   Scenario: Create a new Donation without a take
     Given I can login with username "user" and password "password"
     And The response code is 200
-    And User "user" is a donor
+    And User "user" is the donor
     But There is no Take
-    When I create a new donation from the donor but without a take action
+    When The donor creates a donation from the take action
     Then The response code is 201
     And There is 1 donation created
 
