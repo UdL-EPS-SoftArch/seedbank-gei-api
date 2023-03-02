@@ -14,6 +14,7 @@ import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -60,11 +61,11 @@ public class CreateDonationStepDefs {
 
     @But("There is no Take")
     public void thereIsNoValidTake() {
-        assertNull(take);
+        assertEquals(0, takeRepository.count());
     }
 
     @And("There is {int} donation created")
     public void thereIsDonationCreated(int numDonations) {
-        Assert.assertEquals(numDonations, donationRepository.count());
+        assertEquals(numDonations, donationRepository.count());
     }
 }
