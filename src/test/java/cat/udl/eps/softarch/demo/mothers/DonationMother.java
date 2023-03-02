@@ -3,15 +3,7 @@ package cat.udl.eps.softarch.demo.mothers;
 import cat.udl.eps.softarch.demo.domain.Donation;
 import cat.udl.eps.softarch.demo.domain.Donor;
 import cat.udl.eps.softarch.demo.domain.Take;
-import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
