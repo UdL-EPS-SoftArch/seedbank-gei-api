@@ -8,6 +8,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cat.udl.eps.softarch.demo.domain.User;
+import cat.udl.eps.softarch.demo.mothers.DonorMother;
+import cat.udl.eps.softarch.demo.repository.DonorRepository;
 import cat.udl.eps.softarch.demo.repository.UserRepository;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -24,6 +26,9 @@ public class RegisterStepDefs {
 
   @Autowired
   private UserRepository userRepository;
+
+  @Autowired
+  private DonorRepository donorRepository;
 
   @Given("^There is no registered user with username \"([^\"]*)\"$")
   public void thereIsNoRegisteredUserWithUsername(String user) {
@@ -106,4 +111,35 @@ public class RegisterStepDefs {
                     .with(AuthenticationStepDefs.authenticate()))
             .andExpect(status().isNotFound());
   }
+
+
+  @Given("^There is no registered donor with username \"([^\"]*)\"$")
+  public void thereIsNoRegisteredDonorWithUsername(String user) {
+    Assert.assertFalse("Donor \""
+                    +  user + "\"shouldn't exist",
+            donorRepository.existsById(user));
+  }
+
+  @Given("^There is a registered donor with username \"([^\"]*)\" and password \"([^\"]*)\" and email \"([^\"]*)\"$")
+  public void thereIsARegisteredDonorWithUsernameAndPasswordAndEmail(String username, String password, String email) {
+    if (!donorRepository.existsById(username)) {
+      var donor = DonorMother.getValidDonorWith(username, password, email);
+      donorRepository.save(donor);
+    }
+  }
+
+  @When("^I register a new donor with username \"([^\"]*)\", email \"([^\"]*)\" and password \"([^\"]*)\"$")
+  public void iRegisterANewDonorWithUsernameEmailAndPassword(String username, String email, String password) throws Throwable {
+    var donor = DonorMother.getValidDonorWith(username, password, email);
+    stepDefs.result = stepDefs.mockMvc.perform(
+                    post("/users")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(new JSONObject(
+                                    stepDefs.mapper.writeValueAsString(donor)
+                            ).put("password", password).toString())
+                            .accept(MediaType.APPLICATION_JSON)
+                            .with(AuthenticationStepDefs.authenticate()))
+            .andDo(print());
+  }
+
 }
