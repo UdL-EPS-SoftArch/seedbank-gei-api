@@ -2,10 +2,13 @@ Feature: Update Take
 In order to update Take
 I want to update a new Take
 
-  Scenario: Update a existent Take
-    Given There is Take available with id 1
-    Then The response code is 200
-    When I update the Take with id 1
+  Background:
+    Given There is a registered user with username "username" and password "password" and email "user@sample.app"
+
+  Scenario: Update a Take with user
+    Given I login as "username" with password "password"
+    And I create a new Take with amount 5, weight 5 and location "Lleida"
+    When I update Take
     Then The response code is 201
-    And The Take with id 1  has been updated
-    Then The response code is 200
+    And Take has been updated
+    And The response code is 200

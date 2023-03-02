@@ -14,17 +14,17 @@ import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.Optional;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 public class UpdateTakeStepDefs {
+    public static String newResourceUri;
     @Autowired
     private StepDefs stepDefs;
 
     @Autowired
     private TakeRepository takeRepository;
 
-    @When("I update the Take with id {long}")
+    /*@When("I update the Take with id {long}")
     public void iUpdateTheTake(long id)  throws Exception{
         Take take = new Take();
         take.setTakeDate(ZonedDateTime.now());
@@ -38,12 +38,26 @@ public class UpdateTakeStepDefs {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new JSONObject( stepDefs.mapper.writeValueAsString(take)).toString())
         );
-    }
+        newResourceUri = stepDefs.result.andReturn().getResponse().getHeader("Location");
+    }*/
 
-    @And("The Take with id {long}  has been updated")
-    public void theTakeWithIdHasBeenUpdated(long id)  throws Exception {
+    @When("^I update Take$")
+    public void iUpdateATake() throws Throwable {
         stepDefs.result = stepDefs.mockMvc.perform(
-                get("/takes/{id}", id)
-                        .accept(MediaType.APPLICATION_JSON));
+                post("/takes")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(new JSONObject( CreateTakeStepDefs.createdTake).toString())
+                        .with(AuthenticationStepDefs.authenticate())
+        );
+        newResourceUri = stepDefs.result.andReturn().getResponse().getHeader("Location");
+
+    }
+    @And("^Take has been updated$")
+    public void takeHasBeenUpdated() throws Exception {
+        stepDefs.result = stepDefs.mockMvc.perform(
+                get(UpdateTakeStepDefs.newResourceUri)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(AuthenticationStepDefs.authenticate())
+        );
     }
 }
