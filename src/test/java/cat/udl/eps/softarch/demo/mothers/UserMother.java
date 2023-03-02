@@ -1,6 +1,7 @@
 package cat.udl.eps.softarch.demo.mothers;
 
 import cat.udl.eps.softarch.demo.domain.User;
+import org.assertj.core.util.TriFunction;
 import org.jetbrains.annotations.Nullable;
 
 public class UserMother {
@@ -24,11 +25,15 @@ public class UserMother {
     }
 
     public static User getUserWithEncodingPassword(@Nullable String name) {
-        return getUserWithEncodingPassword(name, validPassword, validEmail);
+        return getUserSimple(name, UserMother::getUserWithEncodingPassword);
     }
 
     public static User getUser(@Nullable String userName) {
-        return getUser(userName, validPassword, validEmail);
+        return getUserSimple(userName, UserMother::getUser);
+    }
+
+    private static User getUserSimple(String name, TriFunction<String, String, String, User> func) {
+        return func.apply(name, validPassword, validEmail);
     }
 
 }
