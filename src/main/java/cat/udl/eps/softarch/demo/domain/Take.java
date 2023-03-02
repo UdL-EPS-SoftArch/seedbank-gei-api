@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = true)
