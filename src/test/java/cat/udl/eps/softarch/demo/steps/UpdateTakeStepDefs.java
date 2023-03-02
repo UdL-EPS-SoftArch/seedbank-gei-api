@@ -21,26 +21,6 @@ public class UpdateTakeStepDefs {
     @Autowired
     private StepDefs stepDefs;
 
-    @Autowired
-    private TakeRepository takeRepository;
-
-    /*@When("I update the Take with id {long}")
-    public void iUpdateTheTake(long id)  throws Exception{
-        Take take = new Take();
-        take.setTakeDate(ZonedDateTime.now());
-        take.setId(id);
-        take.setAmount(5);
-        take.setWeight(new BigDecimal("5"));
-        take.setLocation("Lleida");
-
-        stepDefs.result = stepDefs.mockMvc.perform(
-                post("/takes")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(new JSONObject( stepDefs.mapper.writeValueAsString(take)).toString())
-        );
-        newResourceUri = stepDefs.result.andReturn().getResponse().getHeader("Location");
-    }*/
-
     @When("^I update Take$")
     public void iUpdateATake() throws Throwable {
         stepDefs.result = stepDefs.mockMvc.perform(
