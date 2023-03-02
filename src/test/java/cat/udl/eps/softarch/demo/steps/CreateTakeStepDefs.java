@@ -19,27 +19,18 @@ public class CreateTakeStepDefs {
     String newResourceUri;
     @Autowired
     private StepDefs stepDefs;
-    
-    @Given("^There is no Take available with id (\\d+)$")
-    public void thereIsNoTakeAvailableWithId(Long id) throws Exception {
-        stepDefs.result = stepDefs.mockMvc.perform(
-                get("/takes/{id}", id)
-                        .accept(MediaType.APPLICATION_JSON));
-    }
 
-    @When("^I create a new Take$")
-    public void iCreateANewTake() throws Throwable {
+    @When("^I create a new Take with amount (\\d+), weight (\\d+) and location \"([^\"]*\")$")
+    public void iCreateANewTake(Integer amount, Integer weight, String location) throws Throwable {
         Take take = new Take();
-        // Pasar a la feature
-        take.setTakeDate(ZonedDateTime.now());
-        take.setAmount(5);
-        take.setWeight(new BigDecimal("5"));
-        take.setLocation("Lleida");
-
+        take.setAmount(amount);
+        take.setWeight(new BigDecimal(weight));
+        take.setLocation(location);
         stepDefs.result = stepDefs.mockMvc.perform(
                 post("/takes")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(stepDefs.mapper.writeValueAsString(take))
+                        .with(AuthenticationStepDefs.authenticate())
         );
         newResourceUri = stepDefs.result.andReturn().getResponse().getHeader("Location");
     }
@@ -48,6 +39,7 @@ public class CreateTakeStepDefs {
     public void takeHasBeenCreated() throws Exception {
         stepDefs.result = stepDefs.mockMvc.perform(
                         get(newResourceUri)
+                                .with(AuthenticationStepDefs.authenticate())
                                 .accept(MediaType.APPLICATION_JSON));
     }
 }

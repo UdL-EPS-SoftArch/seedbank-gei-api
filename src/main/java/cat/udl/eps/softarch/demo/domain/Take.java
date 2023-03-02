@@ -11,7 +11,6 @@ import java.time.ZonedDateTime;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class Take extends Batch {
-    @NotNull
-    private ZonedDateTime takeDate;
+    private ZonedDateTime takeDate = ZonedDateTime.now();
 
 }
