@@ -16,7 +16,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 
 public class CreateTakeStepDefs {
-    String newResourceUri;
+    public static String newResourceUri;
     @Autowired
     private StepDefs stepDefs;
 

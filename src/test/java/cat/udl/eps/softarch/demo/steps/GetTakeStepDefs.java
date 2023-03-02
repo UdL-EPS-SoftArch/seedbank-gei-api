@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
@@ -21,10 +22,11 @@ public class GetTakeStepDefs {
     @Autowired
     private TakeRepository takeRepository;
 
-    @And("^I get a new Take with id (\\d+)$")
-    public void takeHasBeenCreated(Long id) throws Exception {
+    @When("^I get the Take$")
+    public void takeHasBeenCreated() throws Exception {
         stepDefs.result = stepDefs.mockMvc.perform(
-                get("/takes/{id}", id)
-                        .accept(MediaType.APPLICATION_JSON));
+                get(CreateTakeStepDefs.newResourceUri)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(AuthenticationStepDefs.authenticate()));
     }
 }
