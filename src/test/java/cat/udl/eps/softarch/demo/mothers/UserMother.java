@@ -1,6 +1,7 @@
 package cat.udl.eps.softarch.demo.mothers;
 
 import cat.udl.eps.softarch.demo.domain.User;
+import org.jetbrains.annotations.Nullable;
 
 public class UserMother {
 
@@ -8,12 +9,26 @@ public class UserMother {
     private static final String validUserName = "user";
     private static final String validPassword = "password";
 
-    public static User getValidUser() {
+    public static User getUser(@Nullable String userName, @Nullable String password, @Nullable String email) {
         User user = new User();
-        user.setEmail(validEmail);
-        user.setUsername(validUserName);
-        user.setPassword(validPassword);
+        user.setUsername(userName);
+        user.setPassword(password);
+        user.setEmail(email);
         return user;
+    }
+
+    public static User getUserWithEncodingPassword(@Nullable String userName, @Nullable String password, @Nullable String email) {
+        var user = getUser(userName, password, email);
+        user.encodePassword();
+        return user;
+    }
+
+    public static User getUserWithEncodingPassword(@Nullable String name) {
+        return getUserWithEncodingPassword(name, validPassword, validEmail);
+    }
+
+    public static User getUser(@Nullable String userName) {
+        return getUser(userName, validPassword, validEmail);
     }
 
 }

@@ -18,7 +18,6 @@ public class Batch extends UriEntity<Long> {
     @Id
     private Long id;
 
-
     @NotNull
     @Min(value = 1, message = "The minimal amount of a batch should be one")
     private Integer amount;
