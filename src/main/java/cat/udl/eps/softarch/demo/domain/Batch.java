@@ -1,6 +1,7 @@
 package cat.udl.eps.softarch.demo.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
@@ -11,11 +12,11 @@ import java.time.ZonedDateTime;
 
 @Entity
 @Data
-public class Batch {
+@EqualsAndHashCode(callSuper = true)
+public class Batch extends UriEntity<Long> {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
-    private long id;
-
+    private Long id;
 
     @NotNull
     @Min(value = 1, message = "The minimal amount of a batch should be one")
@@ -31,6 +32,4 @@ public class Batch {
 
     private ZonedDateTime date = ZonedDateTime.now();
 
-    // @ManyToOne
-    // private Seed of;
 }
