@@ -80,11 +80,8 @@ public class DonationStepDefs {
 
     @When("The donor removes the donation")
     public void theDonorRemovesTheDonation() throws Exception {
-        var myballs  = donationRepository.findAll();
         stepDefs.result = stepDefs.mockMvc.perform(delete("/donations/{id}", donation.getId())
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .characterEncoding("utf-8")
-                .content(stepDefs.mapper.writeValueAsString(donation))
                 .accept(MediaType.APPLICATION_JSON)
                 .with(AuthenticationStepDefs.authenticate())).andDo(print());
     }
