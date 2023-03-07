@@ -16,3 +16,8 @@ I want to create a new Take
     Given I'm not logged in
     When I create a new Take with amount 5, weight 5 and location "Lleida"
     Then The response code is 401
+
+  Scenario: Create a new Take with empty body
+    Given I login as "username" with password "password"
+    When I create a new Take with empty body
+    Then The response code is 500
