@@ -37,4 +37,14 @@ public class CreateTakeStepDefs {
                                 .with(AuthenticationStepDefs.authenticate())
                                 .accept(MediaType.APPLICATION_JSON));
     }
+
+    @When("^I create a new Take with empty body$")
+    public void createTakeEmptyBody() throws Throwable {
+        stepDefs.result = stepDefs.mockMvc.perform(
+                post("/takes")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(stepDefs.mapper.writeValueAsString(null))
+                        .with(AuthenticationStepDefs.authenticate())
+        );
+    }
 }
