@@ -9,7 +9,7 @@ public class DonorMother {
     private static final String VALID_EMAIL = "donor@sample.com";
 
     public static Donor getValidDonorWith(@Nullable String name, @Nullable String password, @Nullable String email) {
-        Donor donor = new Donor();
+        var donor = new Donor();
         donor.setUsername(name);
         donor.setPassword(password);
         donor.setEmail(email);
