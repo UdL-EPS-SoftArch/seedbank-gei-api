@@ -60,7 +60,6 @@ public class DonationStepDefs {
                 .content(stepDefs.mapper.writeValueAsString(donation))
                 .accept(MediaType.APPLICATION_JSON)
                 .with(AuthenticationStepDefs.authenticate())).andDo(print());
-        donation = donationRepository.findAll().iterator().next();
     }
 
     @But("There is no Donor")
@@ -80,6 +79,7 @@ public class DonationStepDefs {
 
     @When("The donor removes the donation")
     public void theDonorRemovesTheDonation() throws Exception {
+        donation = donationRepository.findAll().iterator().next();
         stepDefs.result = stepDefs.mockMvc.perform(delete("/donations/{id}", donation.getId())
                 .characterEncoding("utf-8")
                 .accept(MediaType.APPLICATION_JSON)
