@@ -21,12 +21,4 @@ public class GetTakeStepDefs {
 
     @Autowired
     private TakeRepository takeRepository;
-
-    @When("^I get the Take$")
-    public void takeHasBeenCreated() throws Exception {
-        stepDefs.result = stepDefs.mockMvc.perform(
-                get(CreateTakeStepDefs.newResourceUri)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .with(AuthenticationStepDefs.authenticate()));
-    }
 }
