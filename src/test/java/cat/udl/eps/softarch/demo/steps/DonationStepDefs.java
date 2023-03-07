@@ -8,7 +8,6 @@ import cat.udl.eps.softarch.demo.mothers.TakeMother;
 import cat.udl.eps.softarch.demo.repository.DonationRepository;
 import cat.udl.eps.softarch.demo.repository.DonorRepository;
 import cat.udl.eps.softarch.demo.repository.TakeRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.But;
 import io.cucumber.java.en.When;
@@ -55,7 +54,13 @@ public class DonationStepDefs {
     @When("The donor creates a donation from the take action")
     public void createDonation() throws Exception {
         donation = DonationMother.getValidDonationFor(donor, take);
-        stepDefs.result = stepDefs.mockMvc.perform(post("/donations").contentType(MediaType.APPLICATION_JSON_VALUE).characterEncoding("utf-8").content(stepDefs.mapper.writeValueAsString(donation)).accept(MediaType.APPLICATION_JSON).with(AuthenticationStepDefs.authenticate())).andDo(print());
+        stepDefs.result = stepDefs.mockMvc.perform(post("/donations")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .characterEncoding("utf-8")
+                .content(stepDefs.mapper.writeValueAsString(donation))
+                .accept(MediaType.APPLICATION_JSON)
+                .with(AuthenticationStepDefs.authenticate())).andDo(print());
+        donation = donationRepository.findAll().iterator().next();
     }
 
     @But("There is no Donor")
@@ -75,6 +80,12 @@ public class DonationStepDefs {
 
     @When("The donor removes the donation")
     public void theDonorRemovesTheDonation() throws Exception {
-        stepDefs.result = stepDefs.mockMvc.perform(delete("/donations").contentType(MediaType.APPLICATION_JSON_VALUE).characterEncoding("utf-8").content(stepDefs.mapper.writeValueAsString(donation)).accept(MediaType.APPLICATION_JSON).with(AuthenticationStepDefs.authenticate())).andDo(print());
+        var myballs  = donationRepository.findAll();
+        stepDefs.result = stepDefs.mockMvc.perform(delete("/donations/{id}", donation.getId())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .characterEncoding("utf-8")
+                .content(stepDefs.mapper.writeValueAsString(donation))
+                .accept(MediaType.APPLICATION_JSON)
+                .with(AuthenticationStepDefs.authenticate())).andDo(print());
     }
 }
