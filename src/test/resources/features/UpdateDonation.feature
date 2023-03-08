@@ -4,7 +4,7 @@ Feature: Update a Donation
   I want to be able to update a donation
 
   Background: 
-    Given There is a registered user with username "user" and password "password" and email "user@sample.app"
+    Given There is a registered donor with username "user" and password "password" and email "user@sample.app"
 
   Scenario: Update a donation successfully
     Given I can login with username "user" and password "password"
@@ -16,3 +16,4 @@ Feature: Update a Donation
     When The donor updates the donation
     Then The response code is 200
     And There is 1 donation created
+    And The new donation is updated
