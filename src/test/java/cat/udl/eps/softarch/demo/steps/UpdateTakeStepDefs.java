@@ -26,17 +26,8 @@ public class UpdateTakeStepDefs {
 
     @When("^I update Take with changing amount to (\\d+)$")
     public void iUpdateTakeWithChangingAmountTo(Integer newAmount)throws Throwable{
-        //Getting the old Take JSON
-        String oldTake = stepDefs.mockMvc.perform(
-                get(CreateTakeStepDefs.newResourceUri)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .with(AuthenticationStepDefs.authenticate())).andReturn().getResponse().getContentAsString();
-        JSONObject oldTakeJSON = new JSONObject(oldTake);
-
-        //Updating Take variabes
         JSONObject modifyTake = new JSONObject();
         modifyTake.put("amount", newAmount);
-
         stepDefs.result = stepDefs.mockMvc.perform(patch(CreateTakeStepDefs.newResourceUri)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(modifyTake.toString())
@@ -44,7 +35,6 @@ public class UpdateTakeStepDefs {
                         .with(AuthenticationStepDefs.authenticate()));
 
         JSONObject updateTakeJSON = new JSONObject(stepDefs.result.andReturn().getResponse().getContentAsString());
-
         Assert.assertEquals(newAmount, updateTakeJSON.get("amount"));
     }
     
