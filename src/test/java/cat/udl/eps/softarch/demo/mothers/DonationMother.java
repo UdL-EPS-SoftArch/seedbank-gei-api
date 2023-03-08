@@ -11,7 +11,7 @@ import java.time.ZonedDateTime;
 public class DonationMother {
 
     public static Donation getValidDonationFor(@Nullable Donor donor, @Nullable Take take) {
-        Donation donation = new Donation();
+        var donation = new Donation();
         donation.setDonor(donor);
         donation.setTakenBy(take);
         donation.setAmount(1);
