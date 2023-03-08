@@ -25,4 +25,7 @@ public class Seed {
     @ElementCollection
     private List<String> commonName;
 
+    @ManyToOne
+    @JsonIdentityReference(alwaysAsId = true)
+    private Batch of;
 }
