@@ -9,4 +9,7 @@ import javax.persistence.Entity;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class Request extends Batch{
+    private Propagator propagator;
+
+    private Take fulfilledBy;
 }
