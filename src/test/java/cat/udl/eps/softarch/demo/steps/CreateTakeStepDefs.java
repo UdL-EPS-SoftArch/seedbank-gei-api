@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 public class CreateTakeStepDefs {
     public static String newResourceUri;
+
     @Autowired
     private StepDefs stepDefs;
 
@@ -21,6 +22,7 @@ public class CreateTakeStepDefs {
         take.setAmount(amount);
         take.setWeight(new BigDecimal(weight));
         take.setLocation(location);
+
         stepDefs.result = stepDefs.mockMvc.perform(
                 post("/takes")
                         .contentType(MediaType.APPLICATION_JSON)
