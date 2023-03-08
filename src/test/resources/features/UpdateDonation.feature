@@ -15,3 +15,4 @@ Feature: Update a Donation
     And The response code is 201
     When The donor updates the donation
     Then The response code is 200
+    And There is 1 donation created
