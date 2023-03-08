@@ -14,11 +14,14 @@ import io.cucumber.java.en.When;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 
 @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
@@ -75,6 +78,21 @@ public class DonationStepDefs {
     @And("There is {int} donation created")
     public void thereIsDonationCreated(int numDonations) {
         assertEquals(numDonations, donationRepository.count());
+    }
+
+    @When("I retrieve all donations")
+    public void iRetrieveAllDonations() throws Exception {
+        stepDefs.result = stepDefs.mockMvc.perform(
+                get("/donations")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(AuthenticationStepDefs.authenticate()))
+                .andDo(print());
+    }
+
+    @And("The response contains {int} donations")
+    public void theResponseContainsDonations(int numDonations) throws Exception {
+        stepDefs.result
+                .andExpect(jsonPath("$._embedded.donations", hasSize(numDonations)));
     }
 
     @When("The donor removes the donation")
