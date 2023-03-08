@@ -1,11 +1,9 @@
 package cat.udl.eps.softarch.demo.domain;
 
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import lombok.Data;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -21,10 +19,10 @@ public class Seed {
 
     @NotNull
     @NotBlank
-    String scientificName;
+    private String scientificName;
 
     @NotNull
     @ElementCollection
-    List<String> commonName;
+    private List<String> commonName;
 
 }
