@@ -5,39 +5,47 @@ import cat.udl.eps.softarch.demo.repository.TakeRepository;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
+import io.cucumber.java.sk.Tak;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.ResultActions;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.Optional;
 
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 public class UpdateTakeStepDefs {
-    public static String newResourceUri;
     @Autowired
     private StepDefs stepDefs;
 
-    @When("^I update Take$")
-    public void iUpdateATake() throws Throwable {
-        stepDefs.result = stepDefs.mockMvc.perform(
-                post("/takes")
-                        .accept(MediaType.APPLICATION_JSON)
-                        .content(new JSONObject( CreateTakeStepDefs.createdTake).toString())
-                        .with(AuthenticationStepDefs.authenticate())
-        );
-        newResourceUri = stepDefs.result.andReturn().getResponse().getHeader("Location");
 
-    }
-    @And("^Take has been updated$")
-    public void takeHasBeenUpdated() throws Exception {
-        stepDefs.result = stepDefs.mockMvc.perform(
-                get(UpdateTakeStepDefs.newResourceUri)
+    @When("^I update Take with changing amount to (\\d+)$")
+    public void iUpdateTakeWithChangingAmountTo(Integer newAmount)throws Throwable{
+        //Getting the old Take JSON
+        String oldTake = stepDefs.mockMvc.perform(
+                get(CreateTakeStepDefs.newResourceUri)
                         .accept(MediaType.APPLICATION_JSON)
-                        .with(AuthenticationStepDefs.authenticate())
-        );
+                        .with(AuthenticationStepDefs.authenticate())).andReturn().getResponse().getContentAsString();
+        JSONObject oldTakeJSON = new JSONObject(oldTake);
+
+        //Updating Take variabes
+        JSONObject modifyTake = new JSONObject();
+        modifyTake.put("amount", newAmount);
+
+        stepDefs.result = stepDefs.mockMvc.perform(patch(CreateTakeStepDefs.newResourceUri)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(modifyTake.toString())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(AuthenticationStepDefs.authenticate()));
+
+        JSONObject updateTakeJSON = new JSONObject(stepDefs.result.andReturn().getResponse().getContentAsString());
+
+        Assert.assertEquals(newAmount, updateTakeJSON.get("amount"));
     }
+    
 }
