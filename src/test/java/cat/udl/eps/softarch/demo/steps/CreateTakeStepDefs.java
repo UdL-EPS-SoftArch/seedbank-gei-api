@@ -32,7 +32,7 @@ public class CreateTakeStepDefs {
         newResourceUri = stepDefs.result.andReturn().getResponse().getHeader("Location");
     }
 
-    @And("^I retrieve that Take$")
+    @And("^I try to retrieve that Take$")
     public void takeHasBeenCreated() throws Exception {
         stepDefs.result = stepDefs.mockMvc.perform(
                         get(newResourceUri)

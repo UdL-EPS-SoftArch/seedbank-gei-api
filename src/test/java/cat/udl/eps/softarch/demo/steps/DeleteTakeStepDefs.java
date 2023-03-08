@@ -35,13 +35,4 @@ public class DeleteTakeStepDefs {
                         .with(AuthenticationStepDefs.authenticate())
         );
     }
-    @And("^Take has been deleted$")
-    public void takeHasBeenDeleted() throws Exception {
-        stepDefs.result = stepDefs.mockMvc.perform(
-                get(CreateTakeStepDefs.newResourceUri)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .with(AuthenticationStepDefs.authenticate())
-        );
-    }
-
 }

@@ -9,5 +9,5 @@ Feature: Get Take
   Scenario: Get a new Take
     Given I login as "username" with password "password"
     And I create a new Take with amount 5, weight 5 and location "Lleida"
-    When I retrieve that Take
+    When I try to retrieve that Take
     Then The response code is 200

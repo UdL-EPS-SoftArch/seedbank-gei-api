@@ -10,7 +10,7 @@ I want to delete a Take
     And I create a new Take with amount 5, weight 5 and location "Lleida"
     When I delete Take
     Then The response code is 204
-    And Take has been deleted
+    And I try to retrieve that Take
     And The response code is 404
 
   Scenario: Delete a Take with user not logged in
