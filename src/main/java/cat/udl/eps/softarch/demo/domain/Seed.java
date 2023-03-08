@@ -28,4 +28,8 @@ public class Seed {
     @ManyToOne
     @JsonIdentityReference(alwaysAsId = true)
     private Batch of;
+
+    @ManyToMany
+    @JsonIdentityReference(alwaysAsId = true)
+    private List<Seed> beneficialFor;
 }
