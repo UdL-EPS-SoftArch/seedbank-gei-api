@@ -8,7 +8,7 @@ import java.time.ZonedDateTime;
 public class TakeMother {
 
     public static Take getValidTake() {
-        Take take = new Take();
+        var take = new Take();
         take.setAmount(6);
         take.setWeight(BigDecimal.TEN);
         take.setLocation("Barcelona");

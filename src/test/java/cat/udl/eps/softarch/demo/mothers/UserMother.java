@@ -11,7 +11,7 @@ public class UserMother {
     private static final String validPassword = "password";
 
     public static User getUser(@Nullable String userName, @Nullable String password, @Nullable String email) {
-        User user = new User();
+        var user = new User();
         user.setUsername(userName);
         user.setPassword(password);
         user.setEmail(email);
@@ -25,15 +25,15 @@ public class UserMother {
     }
 
     public static User getUserWithEncodingPassword(@Nullable String name) {
-        return getUserSimple(name, UserMother::getUserWithEncodingPassword);
+        return getValidUserFrom(name, UserMother::getUserWithEncodingPassword);
     }
 
     public static User getUser(@Nullable String userName) {
-        return getUserSimple(userName, UserMother::getUser);
+        return getValidUserFrom(userName, UserMother::getUser);
     }
 
-    private static User getUserSimple(String name, TriFunction<String, String, String, User> func) {
-        return func.apply(name, validPassword, validEmail);
+    private static User getValidUserFrom(String name, TriFunction<String, String, String, User> userGenerator) {
+        return userGenerator.apply(name, validPassword, validEmail);
     }
 
 }
