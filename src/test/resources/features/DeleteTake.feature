@@ -4,9 +4,9 @@ I want to delete a Take
 
   Background:
     Given There is a registered user with username "username" and password "password" and email "user@sample.app"
-#    Given There is a registered propagator with username "propagator" and password "password" and email "propagator@sample.app" with the following takes:
-#    | id | amount | weight | location | date                      |   takeDate                  |
-#    | 1  |    2   | 5.0    |  Lleida  | 2023-03-09T14:30:00+01:00 |   2023-03-09T14:30:00+01:00 |
+    Given There is a registered propagator with username "propagator" and password "password" and email "propagator@sample.app" with the following takes:
+    | id | amount | weight | location | date                      |   takeDate                  |
+    | 111  |    2   | 5.0    |  "Lleida"  | 2023-03-09T14:30:00+01:00 |   2023-03-09T14:30:00+01:00 |
 
   Scenario: Delete a Take with user logged in
     Given I login as "username" with password "password"
