@@ -5,6 +5,7 @@ import cat.udl.eps.softarch.demo.domain.User;
 import cat.udl.eps.softarch.demo.mothers.DonorMother;
 import cat.udl.eps.softarch.demo.mothers.UserMother;
 import cat.udl.eps.softarch.demo.repository.DonorRepository;
+import cat.udl.eps.softarch.demo.repository.PropagatorRepository;
 import cat.udl.eps.softarch.demo.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.cucumber.java.en.And;
@@ -40,6 +41,9 @@ public class RegisterStepDefs {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PropagatorRepository propagatorRepository;
 
     @Autowired
     private DonorRepository donorRepository;
@@ -94,6 +98,13 @@ public class RegisterStepDefs {
     public void itHasNotBeenCreatedAUserWithUsername(String username) throws Throwable {
         stepDefs.result = callApiWithAuthentication(get("/users/{username}", username))
                 .andExpect(status().isNotFound());
+    }
+
+    @Given("^There is no registered propagator with username \"([^\"]*)\"$")
+    public void thereIsNoRegisteredPropagatorWithUsername(String user) {
+        Assert.assertFalse("Propagator \""
+                        + user + "\"shouldn't exist",
+                propagatorRepository.existsById(user));
     }
 
 
