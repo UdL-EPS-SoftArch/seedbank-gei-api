@@ -114,6 +114,11 @@ public class RegisterStepDefs {
         registerPropagator(() -> PropagatorMother.getValidPropagatorWith(username, password, email));
     }
 
+    @Given("^There is a valid registered propagator with username \"([^\"]*)\"")
+    public void registerValidPropagatorWithUserName(String username) {
+        registerPropagator(() -> PropagatorMother.getValidPropagatorWith(username));
+    }
+
     @Given("^There is no registered donor with username \"([^\"]*)\"$")
     public void thereIsNoRegisteredDonorWithUsername(String user) {
         Assert.assertFalse("Donor \""
