@@ -2,6 +2,7 @@ package cat.udl.eps.softarch.demo.steps;
 
 import cat.udl.eps.softarch.demo.domain.Donor;
 import cat.udl.eps.softarch.demo.domain.Propagator;
+import cat.udl.eps.softarch.demo.domain.Take;
 import cat.udl.eps.softarch.demo.domain.User;
 import cat.udl.eps.softarch.demo.mothers.DonorMother;
 import cat.udl.eps.softarch.demo.mothers.PropagatorMother;
@@ -25,6 +26,7 @@ import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.result.StatusResultMatchers;
 
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -109,9 +111,9 @@ public class RegisterStepDefs {
                 propagatorRepository.existsById(user));
     }
 
-    @Given("^There is a registered propagator with username \"([^\"]*)\" and password \"([^\"]*)\" and email \"([^\"]*)\"$")
-    public void thereIsARegisteredPropagatorWithUsernameAndPasswordAndEmail(String username, String password, String email) {
-        registerPropagator(() -> PropagatorMother.getValidPropagatorWith(username, password, email));
+    @Given("^There is a registered propagator with username \"([^\"]*)\" and password \"([^\"]*)\" and email \"([^\"]*)\" with the following takes:$")
+    public void thereIsARegisteredPropagatorWithUsernameAndPasswordAndEmailAndListOfTakes(String username, String password, String email, ArrayList<Take> listOfTakes) {
+        registerPropagator(() -> PropagatorMother.getValidPropagatorWith(username, password, email, listOfTakes));
     }
 
     @Given("^There is a valid registered propagator with username \"([^\"]*)\"")
@@ -119,9 +121,9 @@ public class RegisterStepDefs {
         registerPropagator(() -> PropagatorMother.getValidPropagatorWith(username));
     }
 
-    @When("^I register a new propagator with username \"([^\"]*)\", email \"([^\"]*)\" and password \"([^\"]*)\"$")
-    public void iRegisterANewPropagatorWithUsernameEmailAndPassword(String username, String email, String password) throws Throwable {
-        registerUserViaApi(() -> PropagatorMother.getValidPropagatorWith(username, password, email));
+    @When("^I register a new propagator with username \"([^\"]*)\", email \"([^\"]*)\" and password \"([^\"]*)\" with the following takes:$")
+    public void iRegisterANewPropagatorWithUsernameEmailAndPasswordAndListOfTakes(String username, String email, String password, ArrayList<Take> listOfTakes) throws Throwable {
+        registerUserViaApi(() -> PropagatorMother.getValidPropagatorWith(username, password, email, listOfTakes));
     }
 
     @Given("^There is no registered donor with username \"([^\"]*)\"$")
