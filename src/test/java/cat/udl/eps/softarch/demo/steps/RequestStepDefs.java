@@ -14,10 +14,13 @@ import io.cucumber.java.en.When;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 public class RequestStepDefs {
@@ -72,5 +75,19 @@ public class RequestStepDefs {
     @But("There is no Take for the propagator")
     public void thereIsNoTakeForThePropagator() {
         assertEquals(0, takeRepository.count());
+    }
+
+    @When("I retrieve all requests")
+    public void iRetrieveAllRequests() throws Exception {
+        stepDefs.result = stepDefs.mockMvc.perform(
+                get("/requests")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(AuthenticationStepDefs.authenticate()))
+                .andDo(print());
+    }
+
+    @And("The response contains {int} requests")
+    public void theResponseContainsRequests(int numRequests) throws Exception {
+        stepDefs.result.andExpect(jsonPath("$._embedded.requests", hasSize(numRequests)));
     }
 }
