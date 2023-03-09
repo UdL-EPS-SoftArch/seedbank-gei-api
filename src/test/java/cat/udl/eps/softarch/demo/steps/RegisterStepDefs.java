@@ -1,8 +1,10 @@
 package cat.udl.eps.softarch.demo.steps;
 
 import cat.udl.eps.softarch.demo.domain.Donor;
+import cat.udl.eps.softarch.demo.domain.Propagator;
 import cat.udl.eps.softarch.demo.domain.User;
 import cat.udl.eps.softarch.demo.mothers.DonorMother;
+import cat.udl.eps.softarch.demo.mothers.PropagatorMother;
 import cat.udl.eps.softarch.demo.mothers.UserMother;
 import cat.udl.eps.softarch.demo.repository.DonorRepository;
 import cat.udl.eps.softarch.demo.repository.PropagatorRepository;
@@ -107,6 +109,10 @@ public class RegisterStepDefs {
                 propagatorRepository.existsById(user));
     }
 
+    @Given("^There is a registered propagator with username \"([^\"]*)\" and password \"([^\"]*)\" and email \"([^\"]*)\"$")
+    public void thereIsARegisteredPropagatorWithUsernameAndPasswordAndEmail(String username, String password, String email) {
+        registerPropagator(() -> PropagatorMother.getValidPropagatorWith(username, password, email));
+    }
 
     @Given("^There is no registered donor with username \"([^\"]*)\"$")
     public void thereIsNoRegisteredDonorWithUsername(String user) {
@@ -138,6 +144,10 @@ public class RegisterStepDefs {
 
     private void registerDonor(Supplier<Donor> donorGenerator) {
         register(donorGenerator.get(), donorRepository);
+    }
+
+    private void registerPropagator(Supplier<Propagator> propagatorGenerator) {
+        register(propagatorGenerator.get(), propagatorRepository);
     }
 
     private <T extends Persistable<ID>, ID> void register(T value, CrudRepository<T, ID> repo) {
