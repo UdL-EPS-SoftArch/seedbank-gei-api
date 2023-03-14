@@ -12,7 +12,7 @@ Feature: Update Seed
     Then The response code is 200
     And There is 1 Seed updated
 
-  Scenario: Update a Seed with invalid scientific name
+  Scenario: Update a Seed with empty scientific name
     Given I login as "username" with password "password"
     And I create a new Seed with scientificName "Allium cepa" and commonName | Onion |
     Then The response code is 200
@@ -35,6 +35,14 @@ Feature: Update Seed
     When I update Seed by changing commonName to | Onion | Cebolla |
     Then The response code is 200
     And There is 1 Seed updated
+
+  Scenario: Update a Seed with empty body
+    Given I login as "username" with password "password"
+    And I create a new Seed with scientificName "Allium cepa" and commonName | Onion |
+    Then The response code is 200
+    When I update Seed with empty body
+    Then The response code is 400
+    And There is 0 Seed updated
 
   Scenario: Update a Seed when I am not logged in
     Given I am not logged in
