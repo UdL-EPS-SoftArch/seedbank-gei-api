@@ -14,6 +14,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
+import io.cucumber.messages.types.DataTable;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
@@ -111,7 +112,7 @@ public class RegisterStepDefs {
                 propagatorRepository.existsById(user));
     }
 
-    @Given("^There is a registered propagator with username \"([^\"]*)\" and password \"([^\"]*)\" and email \"([^\"]*)\" with the following takes:$")
+    @Given("^There is a registered propagator with username \"([^\"]*)\" and password \"([^\"]*)\" and email \"([^\"]*)\" with the following takes$")
     public void thereIsARegisteredPropagatorWithUsernameAndPasswordAndEmailAndListOfTakes(String username, String password, String email, ArrayList<Take> listOfTakes) {
         registerPropagator(() -> PropagatorMother.getValidPropagatorWith(username, password, email, listOfTakes));
     }
@@ -201,6 +202,4 @@ public class RegisterStepDefs {
                 .andDo(print())
                 .andExpect(validator.apply(status()));
     }
-
-
 }
