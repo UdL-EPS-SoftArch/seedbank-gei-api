@@ -8,34 +8,34 @@ Feature: Create Seed
   Scenario: Create a new Seed with valid scientific name and common name
     Given I can login with username "username" and password "password"
     And The response code is 200
-    When I create a new Seed with scientificName "Allium cepa" and commonName "Onion"
+    When I create a new Seed with scientificName "Allium cepa" and commonName | "Onion" |
     Then The response code is 201
     And There is 1 Seed created
 
   Scenario: Create a new Seed with valid scientific name and empty common name
     Given I can login with username "username" and password "password"
     And The response code is 200
-    When I create a new Seed with scientificName "Allium cepa" and commonName ""
+    When I create a new Seed with scientificName "Allium cepa" and commonName | "" |
     Then The response code is 201
     And There is 1 Seed created
 
   Scenario: Create a new Seed with empty scientific name and valid common name
     Given I can login with username "username" and password "password"
     And The response code is 200
-    When I create a new Seed with scientificName "" and commonName "Onion"
+    When I create a new Seed with scientificName "" and commonName | "Onion" |
     Then The response code is 400
     And There is 0 Seed created
 
   Scenario: Create a new Seed with empty scientific name and common name
     Given I can login with username "username" and password "password"
     And The response code is 200
-    When I create a new Seed with scientificName "" and commonName ""
+    When I create a new Seed with scientificName "" and commonName | "" |
     Then The response code is 400
     And There is 0 Seed created
 
   Scenario: Create a new Seed when I am not logged in
     Given I am not logged in
-    When I create a new Seed with scientificName "Allium cepa" and commonName "Onion"
+    When I create a new Seed with scientificName "Allium cepa" and commonName | "Onion" |
     Then The response code is 401
     And There is 0 Seed created
 
