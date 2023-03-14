@@ -9,12 +9,13 @@ import cat.udl.eps.softarch.demo.mothers.PropagatorMother;
 import cat.udl.eps.softarch.demo.mothers.UserMother;
 import cat.udl.eps.softarch.demo.repository.DonorRepository;
 import cat.udl.eps.softarch.demo.repository.PropagatorRepository;
+import cat.udl.eps.softarch.demo.repository.TakeRepository;
 import cat.udl.eps.softarch.demo.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
-import io.cucumber.messages.types.DataTable;
+import io.cucumber.datatable.DataTable;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
@@ -27,7 +28,9 @@ import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.result.StatusResultMatchers;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -43,7 +46,8 @@ public class RegisterStepDefs {
 
     @Autowired
     private StepDefs stepDefs;
-
+    @Autowired
+    private TakeRepository takeRepository;
     @Autowired
     private UserRepository userRepository;
 
@@ -111,10 +115,17 @@ public class RegisterStepDefs {
                         + user + "\"shouldn't exist",
                 propagatorRepository.existsById(user));
     }
-
+// (.*?)
     @Given("^There is a registered propagator with username \"([^\"]*)\" and password \"([^\"]*)\" and email \"([^\"]*)\" with the following takes$")
-    public void thereIsARegisteredPropagatorWithUsernameAndPasswordAndEmailAndListOfTakes(String username, String password, String email, ArrayList<Take> listOfTakes) {
-        registerPropagator(() -> PropagatorMother.getValidPropagatorWith(username, password, email, listOfTakes));
+    public void thereIsARegisteredPropagatorWithUsernameAndPasswordAndEmailAndListOfTakes(String username, String password, String email) {
+        Take take = new Take();
+        take.setAmount(1);
+        take.setWeight(new BigDecimal(5));
+        take.setLocation("Lleida");
+        takeRepository.save(take);
+        ArrayList<Take> takes = new ArrayList<>();
+        takes.add(take);
+        registerPropagator(() -> PropagatorMother.getValidPropagatorWith(username, password, email, takes));
     }
 
     @Given("^There is a valid registered propagator with username \"([^\"]*)\"")
@@ -122,10 +133,10 @@ public class RegisterStepDefs {
         registerPropagator(() -> PropagatorMother.getValidPropagatorWith(username));
     }
 
-    @When("^I register a new propagator with username \"([^\"]*)\", email \"([^\"]*)\" and password \"([^\"]*)\" with the following takes:$")
-    public void iRegisterANewPropagatorWithUsernameEmailAndPasswordAndListOfTakes(String username, String email, String password, ArrayList<Take> listOfTakes) throws Throwable {
-        registerUserViaApi(() -> PropagatorMother.getValidPropagatorWith(username, password, email, listOfTakes));
-    }
+    //@When("^I register a new propagator with username \"([^\"]*)\", email \"([^\"]*)\" and password \"([^\"]*)\" with the following takes:$")
+    //public void iRegisterANewPropagatorWithUsernameEmailAndPasswordAndListOfTakes(String username, String email, String password, ArrayList<Take> listOfTakes) throws Throwable {
+    //    registerUserViaApi(() -> PropagatorMother.getValidPropagatorWith(username, password, email, listOfTakes));
+    //}
 
     @Given("^There is no registered donor with username \"([^\"]*)\"$")
     public void thereIsNoRegisteredDonorWithUsername(String user) {

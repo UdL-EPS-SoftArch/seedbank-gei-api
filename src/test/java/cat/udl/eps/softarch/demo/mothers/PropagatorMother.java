@@ -18,6 +18,7 @@ public class PropagatorMother {
         propagator.setEmail(email);
         propagator.encodePassword();
         propagator.setTakes(listOfTakes);
+        System.out.println(listOfTakes);
         return propagator;
     }
 
