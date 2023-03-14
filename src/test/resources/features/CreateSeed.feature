@@ -19,6 +19,13 @@ Feature: Create Seed
     Then The response code is 201
     And There is 1 Seed created
 
+  Scenario: Create a new Seed with empty scientific name and valid common name
+    Given I can login with username "username" and password "password"
+    And The response code is 200
+    When I create a new Seed with scientificName "" and commonName "Onion"
+    Then The response code is 400
+    And There is 0 Seed created
+
   Scenario: Create a new Seed with empty scientific name and common name
     Given I can login with username "username" and password "password"
     And The response code is 200
