@@ -7,7 +7,7 @@ Feature: Delete Seed
 
   Scenario: Delete a Seed with user logged in
     Given I login as "username" with password "password"
-    And There is a created Seed with scientificName "Allium cepa" and commonName "Onion"
+    And There is a created Seed with scientificName "Allium cepa" and commonName | "Onion" |
     When I delete Seed
     Then the response code is 204
     And I try to retrieve that Seed
@@ -15,13 +15,13 @@ Feature: Delete Seed
 
   Scenario: Delete a Seed with user not logged in
     Given I'm not logged in
-    And There is a created Seed with scientificName "Allium cepa" and commonName "Onion"
+    And There is a created Seed with scientificName "Allium cepa" and commonName | "Onion" |
     When I delete Seed
     Then The response code is 401
 
   Scenario: Delete a Seed with valid scientificName and empty common name
     Given I login as "username" with password "password"
-    And There is a created Seed with scientificName "Allium cepa" and commonName ||
+    And There is a created Seed with scientificName "Allium cepa" and commonName | "" |
     When I delete Seed
     Then the response code is 204
     And I try to retrieve that Seed
