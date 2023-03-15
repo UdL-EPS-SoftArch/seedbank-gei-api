@@ -5,6 +5,8 @@ I want to delete a Take
   Background:
     Given There is a registered user with username "username" and password "password" and email "user@sample.app"
     Given There is a registered propagator with username "propagator" and password "password" and email "propagator@sample.app" with the following takes
+    |id |amount | weight |location | date  |
+    |1 | 1     |2     | Lleida  |2023-03-09T14:30:00+01:00|
   #with the following takes <takes>
      # Example:
       #|takes |

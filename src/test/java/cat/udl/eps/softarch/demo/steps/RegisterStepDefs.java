@@ -16,6 +16,7 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.cucumber.datatable.DataTable;
+import org.hibernate.type.ZonedDateTimeType;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
@@ -28,9 +29,12 @@ import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.result.StatusResultMatchers;
 
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -117,15 +121,23 @@ public class RegisterStepDefs {
     }
 // (.*?)
     @Given("^There is a registered propagator with username \"([^\"]*)\" and password \"([^\"]*)\" and email \"([^\"]*)\" with the following takes$")
-    public void thereIsARegisteredPropagatorWithUsernameAndPasswordAndEmailAndListOfTakes(String username, String password, String email) {
-        Take take = new Take();
-        take.setAmount(1);
-        take.setWeight(new BigDecimal(5));
-        take.setLocation("Lleida");
-        takeRepository.save(take);
-        ArrayList<Take> takes = new ArrayList<>();
-        takes.add(take);
-        registerPropagator(() -> PropagatorMother.getValidPropagatorWith(username, password, email, takes));
+    public void thereIsARegisteredPropagatorWithUsernameAndPasswordAndEmailAndListOfTakes(String username, String password, String email, List<Map<String, String>> table) {
+        ArrayList<Take> listOfTakes = new ArrayList<>();
+        table.forEach( (take) -> {
+            Take currentTake = new Take();
+            currentTake.setId(Long.parseLong(take.get("id")));
+            currentTake.setAmount(Integer.parseInt(take.get("amount")));
+            currentTake.setWeight(new BigDecimal(Integer.parseInt(take.get("weight"))));
+            currentTake.setLocation(take.get("location"));
+            currentTake.setDate((ZonedDateTime.parse(take.get("date"))));
+            listOfTakes.add(currentTake);
+        });
+        System.out.println(listOfTakes.get(0).getId());
+        System.out.println(listOfTakes.get(0).getAmount());
+        System.out.println(listOfTakes.get(0).getWeight());
+        System.out.println(listOfTakes.get(0).getLocation());
+        System.out.println(listOfTakes.get(0).getDate());
+        registerPropagator(() -> PropagatorMother.getValidPropagatorWith(username, password, email, listOfTakes));
     }
 
     @Given("^There is a valid registered propagator with username \"([^\"]*)\"")
