@@ -15,8 +15,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
-import io.cucumber.datatable.DataTable;
-import org.hibernate.type.ZonedDateTimeType;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
@@ -28,11 +26,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.result.StatusResultMatchers;
-
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -119,20 +114,19 @@ public class RegisterStepDefs {
                         + user + "\"shouldn't exist",
                 propagatorRepository.existsById(user));
     }
-// (.*?)
     @Given("^There is a registered propagator with username \"([^\"]*)\" and password \"([^\"]*)\" and email \"([^\"]*)\" with the following takes$")
     public void thereIsARegisteredPropagatorWithUsernameAndPasswordAndEmailAndListOfTakes(String username, String password, String email, List<Map<String, String>> table) {
-        ArrayList<Take> listOfTakes = new ArrayList<>();
-        table.forEach( (take) -> {
+        Propagator propagator = PropagatorMother.getValidPropagatorWith(username, password, email);
+        registerPropagator(() -> propagator);
+        table.forEach((take) -> {
             Take currentTake = new Take();
-            //currentTake.setId(Long.parseLong(take.get("id")));
             currentTake.setAmount(Integer.parseInt(take.get("amount")));
             currentTake.setWeight(new BigDecimal(Integer.parseInt(take.get("weight"))));
             currentTake.setLocation(take.get("location"));
             currentTake.setDate((ZonedDateTime.parse(take.get("date"))));
-            listOfTakes.add(currentTake);
+            currentTake.setTakePropagator(propagator);
+            takeRepository.save(currentTake);
         });
-        registerPropagator(() -> PropagatorMother.getValidPropagatorWith(username, password, email, listOfTakes));
     }
 
     @Given("^There is a valid registered propagator with username \"([^\"]*)\"")
