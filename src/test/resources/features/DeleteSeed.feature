@@ -9,7 +9,7 @@ Feature: Delete Seed
     Given I login as "username" with password "password"
     And There is a created Seed with scientificName "Allium cepa" and commonName | "Onion" |
     When I delete Seed
-    Then the response code is 204
+    Then the response code is 200
     And I try to retrieve that Seed
     And the response code is 404
 
@@ -23,6 +23,6 @@ Feature: Delete Seed
     Given I login as "username" with password "password"
     And There is a created Seed with scientificName "Allium cepa" and commonName | "" |
     When I delete Seed
-    Then the response code is 204
+    Then the response code is 200
     And I try to retrieve that Seed
     And the response code is 404
