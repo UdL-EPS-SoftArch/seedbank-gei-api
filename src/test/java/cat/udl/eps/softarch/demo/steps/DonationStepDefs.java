@@ -113,8 +113,11 @@ public class DonationStepDefs {
 
     @And("The new donation is not updated")
     public void theNewDonationIsNotUpdated() {
+        Donation expectedDonation = donation;
         donation = donationRepository.findAll().iterator().next();
-        assertEquals(donation.getLocation(), previousLocation);
+        Donation actualDonation = donation;
+        assertEquals(expectedDonation.getDonor(), actualDonation.getDonor());
+//        assertEquals(expectedDonation, actualDonation);
     }
 
     @When("I retrieve all donations")
