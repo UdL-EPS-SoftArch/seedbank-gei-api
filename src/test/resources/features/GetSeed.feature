@@ -12,3 +12,7 @@ Feature: Get Seed
     When I try to retrieve that Seed
     Then The response code is 200
 
+  Scenario: Get a Seed which does not exist
+    Given I login as "username" with password "password"
+    When I try to retrieve the Seed that does not exist
+    Then The response code is 404
