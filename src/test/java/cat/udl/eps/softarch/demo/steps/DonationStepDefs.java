@@ -116,8 +116,7 @@ public class DonationStepDefs {
         Donation expectedDonation = donation;
         donation = donationRepository.findAll().iterator().next();
         Donation actualDonation = donation;
-        assertEquals(expectedDonation.getDonor(), actualDonation.getDonor());
-//        assertEquals(expectedDonation, actualDonation);
+        assertEquals(expectedDonation, actualDonation);
     }
 
     @When("I retrieve all donations")
