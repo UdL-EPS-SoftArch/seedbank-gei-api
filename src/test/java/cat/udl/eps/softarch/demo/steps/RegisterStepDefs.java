@@ -1,10 +1,13 @@
 package cat.udl.eps.softarch.demo.steps;
 
 import cat.udl.eps.softarch.demo.domain.Donor;
+import cat.udl.eps.softarch.demo.domain.Propagator;
 import cat.udl.eps.softarch.demo.domain.User;
 import cat.udl.eps.softarch.demo.mothers.DonorMother;
+import cat.udl.eps.softarch.demo.mothers.PropagatorMother;
 import cat.udl.eps.softarch.demo.mothers.UserMother;
 import cat.udl.eps.softarch.demo.repository.DonorRepository;
+import cat.udl.eps.softarch.demo.repository.PropagatorRepository;
 import cat.udl.eps.softarch.demo.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.cucumber.java.en.And;
@@ -33,6 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 public class RegisterStepDefs {
 
     @Autowired
@@ -43,6 +47,9 @@ public class RegisterStepDefs {
 
     @Autowired
     private DonorRepository donorRepository;
+
+    @Autowired
+    private PropagatorRepository propagatorRepository;
 
     @Given("^There is no registered user with username \"([^\"]*)\"$")
     public void thereIsNoRegisteredUserWithUsername(String user) {
@@ -115,6 +122,16 @@ public class RegisterStepDefs {
         registerDonor(() -> DonorMother.getValidDonorWith(username));
     }
 
+    @Given("There is a registered propagator with username {string} and password {string} and email {string}")
+    public void thereIsARegisteredPropagatorWithUsernameAndPasswordAndEmail(String username, String password, String email) {
+        registerPropagator(() -> PropagatorMother.getValidPropagatorWith(username, password, email));
+    }
+
+    @Given("There is a valid registered propagator with username {string}")
+    public void thereIsAValidRegisteredPropagatorWithUsername(String username) {
+        registerPropagator(() -> PropagatorMother.getValidPropagatorWith(username));
+    }
+
     @When("^I register a new donor with username \"([^\"]*)\", email \"([^\"]*)\" and password \"([^\"]*)\"$")
     public void iRegisterANewDonorWithUsernameEmailAndPassword(String username, String email, String password) throws Throwable {
         registerUserViaApi(() -> DonorMother.getValidDonorWith(username, password, email));
@@ -127,6 +144,10 @@ public class RegisterStepDefs {
 
     private void registerDonor(Supplier<Donor> donorGenerator) {
         register(donorGenerator.get(), donorRepository);
+    }
+
+    private void registerPropagator(Supplier<Propagator> propagatorGenerator) {
+        register(propagatorGenerator.get(), propagatorRepository);
     }
 
     private <T extends Persistable<ID>, ID> void register(T value, CrudRepository<T, ID> repo) {
