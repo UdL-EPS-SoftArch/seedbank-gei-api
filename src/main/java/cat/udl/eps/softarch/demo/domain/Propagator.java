@@ -3,9 +3,7 @@ package cat.udl.eps.softarch.demo.domain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.persistence.CollectionTable;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,5 +13,6 @@ import java.util.List;
 public class Propagator extends User {
     @ElementCollection
     @CollectionTable(name = "listOfTakes")
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Take> takes = new ArrayList<>();
 }

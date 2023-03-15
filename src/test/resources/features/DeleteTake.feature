@@ -5,14 +5,8 @@ I want to delete a Take
   Background:
     Given There is a registered user with username "username" and password "password" and email "user@sample.app"
     Given There is a registered propagator with username "propagator" and password "password" and email "propagator@sample.app" with the following takes
-    |id |amount | weight |location | date  |
-    |1 | 1     |2     | Lleida  |2023-03-09T14:30:00+01:00|
-  #with the following takes <takes>
-     # Example:
-      #|takes |
-      #| 123  |
-      #| [{"id": "1234", "amount": "1", "weight": "5.0", "location": "Lleida", "date": "2023-03-09T14:30:00+01:00", "dateTake": "2023-03-09T14:30:00+01:00"}] |
-      #| [{"id": "1234", }]1001  |    2   | 5.0    |  Lleida  | 2023-03-09T14:30:00+01:00 |   2023-03-09T14:30:00+01:00 |
+    | amount  |  weight   | location  | date                      |
+    | 1       |    2      | Lleida    |2023-03-09T14:30:00+01:00  |
 
   Scenario: Delete a Take with user logged in
     Given I login as "username" with password "password"
