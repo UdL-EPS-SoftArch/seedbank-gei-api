@@ -17,3 +17,15 @@ Feature: Update a Donation
     Then The response code is 200
     And There is 1 donation created
     And The new donation is updated
+
+  Scenario: Update a donation with an empty body
+    Given I can login with username "user" and password "password"
+    And The response code is 200
+    And User "user" is the donor
+    And A valid take action exists
+    And The donor creates a donation from the take action
+    And The response code is 201
+    When The donor updates the donation with an empty body
+    Then The response code is 400
+    And There is 1 donation created
+    And The new donation is not updated

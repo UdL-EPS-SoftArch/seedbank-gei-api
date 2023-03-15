@@ -15,18 +15,9 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNull;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.junit.Assert.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -108,6 +99,26 @@ public class DonationStepDefs {
         assertNotEquals(donation.getLocation(), previousLocation);
     }
 
+    @When("The donor updates the donation with an empty body")
+    public void theDonorUpdatesTheDonationWithAnEmptyBody() throws Exception {
+        donation = donationRepository.findAll().iterator().next();
+        previousLocation = donation.getLocation();
+        stepDefs.result = stepDefs.mockMvc.perform(patch("/donations/{id}", donation.getId())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .characterEncoding("utf-8")
+                .accept(MediaType.APPLICATION_JSON).with(AuthenticationStepDefs
+                        .authenticate()))
+                .andDo(print());
+    }
+
+    @And("The new donation is not updated")
+    public void theNewDonationIsNotUpdated() {
+        Donation expectedDonation = donation;
+        donation = donationRepository.findAll().iterator().next();
+        Donation actualDonation = donation;
+        assertEquals(expectedDonation, actualDonation);
+    }
+
     @When("I retrieve all donations")
     public void iRetrieveAllDonations() throws Exception {
         stepDefs.result = stepDefs.mockMvc.perform(
@@ -116,7 +127,6 @@ public class DonationStepDefs {
                         .with(AuthenticationStepDefs.authenticate()))
                 .andDo(print());
     }
-
     @And("The response contains {int} donations")
     public void theResponseContainsDonations(int numDonations) throws Exception {
         stepDefs.result
@@ -132,6 +142,7 @@ public class DonationStepDefs {
 //                        .with(AuthenticationStepDefs.authenticate())
 //                        .queryParam("donor", donor))
 //        .andDo(print());
+
 //    }
 
     @When("The donor removes the donation")
