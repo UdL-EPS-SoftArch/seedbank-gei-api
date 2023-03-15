@@ -125,18 +125,13 @@ public class RegisterStepDefs {
         ArrayList<Take> listOfTakes = new ArrayList<>();
         table.forEach( (take) -> {
             Take currentTake = new Take();
-            currentTake.setId(Long.parseLong(take.get("id")));
+            //currentTake.setId(Long.parseLong(take.get("id")));
             currentTake.setAmount(Integer.parseInt(take.get("amount")));
             currentTake.setWeight(new BigDecimal(Integer.parseInt(take.get("weight"))));
             currentTake.setLocation(take.get("location"));
             currentTake.setDate((ZonedDateTime.parse(take.get("date"))));
             listOfTakes.add(currentTake);
         });
-        System.out.println(listOfTakes.get(0).getId());
-        System.out.println(listOfTakes.get(0).getAmount());
-        System.out.println(listOfTakes.get(0).getWeight());
-        System.out.println(listOfTakes.get(0).getLocation());
-        System.out.println(listOfTakes.get(0).getDate());
         registerPropagator(() -> PropagatorMother.getValidPropagatorWith(username, password, email, listOfTakes));
     }
 

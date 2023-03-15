@@ -7,6 +7,8 @@ import io.cucumber.java.en.When;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import java.math.BigDecimal;
+import java.util.Iterator;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
@@ -46,8 +48,11 @@ public class CreateTakeStepDefs {
         take.setAmount(amount);
         take.setWeight(new BigDecimal(weight));
         take.setLocation(location);
+        System.out.println(take.getId());
         takeRepository.save(take);
-        take = takeRepository.findAll().iterator().next();
+        Iterator it = takeRepository.findAll().iterator();
+        take = (Take) it.next();
+        take = (Take) it.next();
         CreateTakeStepDefs.newResourceUri = "/takes/" + take.getId();
     }
     @When("^I create a new Take with empty body$")
