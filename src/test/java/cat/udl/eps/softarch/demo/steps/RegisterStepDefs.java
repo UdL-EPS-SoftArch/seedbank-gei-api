@@ -128,6 +128,7 @@ public class RegisterStepDefs {
             currentTake.setDate((ZonedDateTime.parse(take.get("date"))));
             currentTake.setTakePropagator(propagator);
             takeRepository.save(currentTake);
+            CreateTakeStepDefs.newResourceUri = "/takes/" + currentTake.getId();
         });
     }
 
@@ -148,6 +149,7 @@ public class RegisterStepDefs {
             currentTake.setDate((ZonedDateTime.parse(take.get("date"))));
             currentTake.setTakePropagator(propagator);
             takeRepository.save(currentTake);
+            CreateTakeStepDefs.newResourceUri = "/takes/" + currentTake.getId();
         });
     }
 
