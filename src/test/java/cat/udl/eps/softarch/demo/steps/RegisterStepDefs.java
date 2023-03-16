@@ -134,10 +134,20 @@ public class RegisterStepDefs {
         registerPropagator(() -> PropagatorMother.getValidPropagatorWith(username));
     }
 
-    //@When("^I register a new propagator with username \"([^\"]*)\", email \"([^\"]*)\" and password \"([^\"]*)\" with the following takes:$")
-    //public void iRegisterANewPropagatorWithUsernameEmailAndPasswordAndListOfTakes(String username, String email, String password, ArrayList<Take> listOfTakes) throws Throwable {
-    //    registerUserViaApi(() -> PropagatorMother.getValidPropagatorWith(username, password, email, listOfTakes));
-    //}
+    @When("^I register a new propagator with username \"([^\"]*)\", email \"([^\"]*)\" and password \"([^\"]*)\" with the following takes:$")
+    public void iRegisterANewPropagatorWithUsernameEmailAndPasswordAndListOfTakes(String username, String email, String password, List<Map<String, String>> table) throws Throwable {
+        Propagator propagator = PropagatorMother.getValidPropagatorWith(username, password, email);
+        registerPropagator(() -> propagator);
+        table.forEach((take) -> {
+            Take currentTake = new Take();
+            currentTake.setAmount(Integer.parseInt(take.get("amount")));
+            currentTake.setWeight(new BigDecimal(Integer.parseInt(take.get("weight"))));
+            currentTake.setLocation(take.get("location"));
+            currentTake.setDate((ZonedDateTime.parse(take.get("date"))));
+            currentTake.setTakePropagator(propagator);
+            takeRepository.save(currentTake);
+        });
+    }
 
     @Given("^There is no registered donor with username \"([^\"]*)\"$")
     public void thereIsNoRegisteredDonorWithUsername(String user) {
