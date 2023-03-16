@@ -1,12 +1,15 @@
 package cat.udl.eps.softarch.demo.steps;
 
+import cat.udl.eps.softarch.demo.domain.Propagator;
 import cat.udl.eps.softarch.demo.domain.Take;
+import cat.udl.eps.softarch.demo.repository.PropagatorRepository;
 import cat.udl.eps.softarch.demo.repository.TakeRepository;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.When;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -18,6 +21,9 @@ public class CreateTakeStepDefs {
     @Autowired
     private TakeRepository takeRepository;
     @Autowired
+    private PropagatorRepository propagatorRepository;
+
+    @Autowired
     private StepDefs stepDefs;
     @When("^I create a new Take with amount (\\d+), weight (\\d+) and location \"([^\"]*\")$")
     public void iCreateANewTake(Integer amount, Integer weight, String location) throws Throwable {
@@ -25,7 +31,8 @@ public class CreateTakeStepDefs {
         take.setAmount(amount);
         take.setWeight(new BigDecimal(weight));
         take.setLocation(location);
-
+        Iterable<Propagator> listOfPropagator = propagatorRepository.findAll();
+        System.out.println(listOfPropagator.iterator().next().getUsername());
         stepDefs.result = stepDefs.mockMvc.perform(
                 post("/takes")
                         .contentType(MediaType.APPLICATION_JSON)
