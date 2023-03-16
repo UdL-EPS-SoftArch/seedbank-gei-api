@@ -48,6 +48,7 @@ public class RegisterStepDefs {
     private StepDefs stepDefs;
     @Autowired
     private TakeRepository takeRepository;
+    
     @Autowired
     private UserRepository userRepository;
 
@@ -56,9 +57,6 @@ public class RegisterStepDefs {
 
     @Autowired
     private DonorRepository donorRepository;
-
-    @Autowired
-    private PropagatorRepository propagatorRepository;
 
     @Given("^There is no registered user with username \"([^\"]*)\"$")
     public void thereIsNoRegisteredUserWithUsername(String user) {
