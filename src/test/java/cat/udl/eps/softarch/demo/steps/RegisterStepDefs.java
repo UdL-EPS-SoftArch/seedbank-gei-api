@@ -2,12 +2,14 @@ package cat.udl.eps.softarch.demo.steps;
 
 import cat.udl.eps.softarch.demo.domain.Donor;
 import cat.udl.eps.softarch.demo.domain.Propagator;
+import cat.udl.eps.softarch.demo.domain.Take;
 import cat.udl.eps.softarch.demo.domain.User;
 import cat.udl.eps.softarch.demo.mothers.DonorMother;
 import cat.udl.eps.softarch.demo.mothers.PropagatorMother;
 import cat.udl.eps.softarch.demo.mothers.UserMother;
 import cat.udl.eps.softarch.demo.repository.DonorRepository;
 import cat.udl.eps.softarch.demo.repository.PropagatorRepository;
+import cat.udl.eps.softarch.demo.repository.TakeRepository;
 import cat.udl.eps.softarch.demo.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.cucumber.java.en.And;
@@ -24,7 +26,10 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.result.StatusResultMatchers;
-
+import java.math.BigDecimal;
+import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -41,15 +46,17 @@ public class RegisterStepDefs {
 
     @Autowired
     private StepDefs stepDefs;
-
+    @Autowired
+    private TakeRepository takeRepository;
+    
     @Autowired
     private UserRepository userRepository;
 
     @Autowired
-    private DonorRepository donorRepository;
+    private PropagatorRepository propagatorRepository;
 
     @Autowired
-    private PropagatorRepository propagatorRepository;
+    private DonorRepository donorRepository;
 
     @Given("^There is no registered user with username \"([^\"]*)\"$")
     public void thereIsNoRegisteredUserWithUsername(String user) {
@@ -103,6 +110,46 @@ public class RegisterStepDefs {
                 .andExpect(status().isNotFound());
     }
 
+    @Given("^There is no registered propagator with username \"([^\"]*)\"$")
+    public void thereIsNoRegisteredPropagatorWithUsername(String user) {
+        Assert.assertFalse("Propagator \""
+                        + user + "\"shouldn't exist",
+                propagatorRepository.existsById(user));
+    }
+    @Given("^There is a registered propagator with username \"([^\"]*)\" and password \"([^\"]*)\" and email \"([^\"]*)\" with the following takes$")
+    public void thereIsARegisteredPropagatorWithUsernameAndPasswordAndEmailAndListOfTakes(String username, String password, String email, List<Map<String, String>> table) {
+        Propagator propagator = PropagatorMother.getValidPropagatorWith(username, password, email);
+        registerPropagator(() -> propagator);
+        table.forEach((take) -> {
+            Take currentTake = new Take();
+            currentTake.setAmount(Integer.parseInt(take.get("amount")));
+            currentTake.setWeight(new BigDecimal(Integer.parseInt(take.get("weight"))));
+            currentTake.setLocation(take.get("location"));
+            currentTake.setDate((ZonedDateTime.parse(take.get("date"))));
+            currentTake.setTakePropagator(propagator);
+            takeRepository.save(currentTake);
+        });
+    }
+
+    @Given("^There is a valid registered propagator with username \"([^\"]*)\"")
+    public void registerValidPropagatorWithUserName(String username) {
+        registerPropagator(() -> PropagatorMother.getValidPropagatorWith(username));
+    }
+
+    @When("^I register a new propagator with username \"([^\"]*)\", email \"([^\"]*)\" and password \"([^\"]*)\" with the following takes:$")
+    public void iRegisterANewPropagatorWithUsernameEmailAndPasswordAndListOfTakes(String username, String email, String password, List<Map<String, String>> table) throws Throwable {
+        Propagator propagator = PropagatorMother.getValidPropagatorWith(username, password, email);
+        registerPropagator(() -> propagator);
+        table.forEach((take) -> {
+            Take currentTake = new Take();
+            currentTake.setAmount(Integer.parseInt(take.get("amount")));
+            currentTake.setWeight(new BigDecimal(Integer.parseInt(take.get("weight"))));
+            currentTake.setLocation(take.get("location"));
+            currentTake.setDate((ZonedDateTime.parse(take.get("date"))));
+            currentTake.setTakePropagator(propagator);
+            takeRepository.save(currentTake);
+        });
+    }
 
     @Given("^There is no registered donor with username \"([^\"]*)\"$")
     public void thereIsNoRegisteredDonorWithUsername(String user) {
@@ -189,6 +236,4 @@ public class RegisterStepDefs {
                 .andDo(print())
                 .andExpect(validator.apply(status()));
     }
-
-
 }
