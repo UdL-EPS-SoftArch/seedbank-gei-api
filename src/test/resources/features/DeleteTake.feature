@@ -3,7 +3,7 @@ In order to delete Take
 I want to delete a Take
 
   Background:
-    Given There is a registered propagator with username "propagator" and password "password" and email "propagator@sample.app" with the following takes
+    Given There is a registered propagator with username "username" and password "password" and email "propagator@sample.app" with the following takes
     | amount  |  weight   | location  | date                      |
     | 1       |    2      | Lleida    |2023-03-09T14:30:00+01:00  |
 
