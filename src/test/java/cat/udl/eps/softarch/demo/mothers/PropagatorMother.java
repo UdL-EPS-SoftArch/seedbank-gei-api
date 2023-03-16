@@ -4,6 +4,7 @@ import cat.udl.eps.softarch.demo.domain.Propagator;
 import org.jetbrains.annotations.Nullable;
 
 public class PropagatorMother {
+
     private static final String VALID_PASSWORD = "password";
     private static final String VALID_EMAIL = "propagator@sample.com";
     //private static final ArrayList<Take> VALID_LIST_OF_TAKES = new ArrayList<>(List.of(TakeMother.getValidTake()));
@@ -14,7 +15,6 @@ public class PropagatorMother {
         propagator.setPassword(password);
         propagator.setEmail(email);
         propagator.encodePassword();
-        //propagator.setTakes(listOfTakes);
         return propagator;
     }
 

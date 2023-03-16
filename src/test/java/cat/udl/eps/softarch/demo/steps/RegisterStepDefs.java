@@ -41,6 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 public class RegisterStepDefs {
 
     @Autowired
@@ -55,6 +56,9 @@ public class RegisterStepDefs {
 
     @Autowired
     private DonorRepository donorRepository;
+
+    @Autowired
+    private PropagatorRepository propagatorRepository;
 
     @Given("^There is no registered user with username \"([^\"]*)\"$")
     public void thereIsNoRegisteredUserWithUsername(String user) {
@@ -165,6 +169,16 @@ public class RegisterStepDefs {
     @Given("^There is a valid registered donor with username \"([^\"]*)\"")
     public void registerValidDonorWithUserName(String username) {
         registerDonor(() -> DonorMother.getValidDonorWith(username));
+    }
+
+    @Given("There is a registered propagator with username {string} and password {string} and email {string}")
+    public void thereIsARegisteredPropagatorWithUsernameAndPasswordAndEmail(String username, String password, String email) {
+        registerPropagator(() -> PropagatorMother.getValidPropagatorWith(username, password, email));
+    }
+
+    @Given("There is a valid registered propagator with username {string}")
+    public void thereIsAValidRegisteredPropagatorWithUsername(String username) {
+        registerPropagator(() -> PropagatorMother.getValidPropagatorWith(username));
     }
 
     @When("^I register a new donor with username \"([^\"]*)\", email \"([^\"]*)\" and password \"([^\"]*)\"$")
