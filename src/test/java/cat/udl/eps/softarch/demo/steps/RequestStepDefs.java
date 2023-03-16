@@ -101,6 +101,26 @@ public class RequestStepDefs {
         assertNotEquals(previousLocation, request.getLocation());
     }
 
+    @When("The propagator updates the request with an empty body")
+    public void thePropagatorUpdatesTheRequestWithAnEmptyBody() throws Exception {
+        request = requestRepository.findAll().iterator().next();
+        previousLocation = request.getLocation();
+        stepDefs.result = stepDefs.mockMvc.perform(patch("/requests/{id}", request.getId())
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .characterEncoding("utf-8")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(AuthenticationStepDefs.authenticate()))
+                .andDo(print());
+    }
+
+    @And("The new request is not updated")
+    public void theNewRequestIsNotUpdated() {
+        Request expectedRequest = request;
+        request = requestRepository.findAll().iterator().next();
+        Request actualRequest = request;
+        assertEquals(expectedRequest, actualRequest);
+    }
+
     @When("I retrieve all requests")
     public void iRetrieveAllRequests() throws Exception {
         stepDefs.result = stepDefs.mockMvc.perform(
