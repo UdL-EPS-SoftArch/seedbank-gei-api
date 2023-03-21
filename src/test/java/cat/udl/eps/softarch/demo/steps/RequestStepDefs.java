@@ -11,12 +11,15 @@ import cat.udl.eps.softarch.demo.repository.TakeRepository;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.But;
 import io.cucumber.java.en.When;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -36,6 +39,8 @@ public class RequestStepDefs {
     private Take take;
 
     private Propagator propagator;
+
+    private String previousLocation;
 
     private Request request;
 
@@ -75,6 +80,45 @@ public class RequestStepDefs {
     @But("There is no Take for the propagator")
     public void thereIsNoTakeForThePropagator() {
         assertEquals(0, takeRepository.count());
+    }
+
+    @When("The propagator updates the request")
+    public void thePropagatorUpdatesTheRequest() throws Exception {
+        Request request = requestRepository.findAll().iterator().next();
+        previousLocation = request.getLocation();
+        stepDefs.result = stepDefs.mockMvc.perform(patch("/requests/{id}", request.getId())
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .characterEncoding("utf-8")
+                        .content(new JSONObject().put("location", "new location").toString())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(AuthenticationStepDefs.authenticate()))
+                .andDo(print());
+    }
+
+    @And("The new request is updated")
+    public void theNewRequestIsUpdated() {
+        Request request = requestRepository.findAll().iterator().next();
+        assertNotEquals(previousLocation, request.getLocation());
+    }
+
+    @When("The propagator updates the request with an empty body")
+    public void thePropagatorUpdatesTheRequestWithAnEmptyBody() throws Exception {
+        request = requestRepository.findAll().iterator().next();
+        previousLocation = request.getLocation();
+        stepDefs.result = stepDefs.mockMvc.perform(patch("/requests/{id}", request.getId())
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .characterEncoding("utf-8")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(AuthenticationStepDefs.authenticate()))
+                .andDo(print());
+    }
+
+    @And("The new request is not updated")
+    public void theNewRequestIsNotUpdated() {
+        Request expectedRequest = request;
+        request = requestRepository.findAll().iterator().next();
+        Request actualRequest = request;
+        assertEquals(expectedRequest, actualRequest);
     }
 
     @When("I retrieve all requests")
