@@ -18,6 +18,7 @@ import org.springframework.http.MediaType;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -80,6 +81,17 @@ public class RequestStepDefs {
     @But("There is no Take for the propagator")
     public void thereIsNoTakeForThePropagator() {
         assertEquals(0, takeRepository.count());
+    }
+
+    @When("The propagator removes the request")
+    public void thePropagatorRemovesTheRequest() throws Exception {
+        Request request = requestRepository.findAll().iterator().next();
+        stepDefs.result = stepDefs.mockMvc.perform(
+                delete("/requests/{id}", request.getId())
+                        .characterEncoding("utf-8")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(AuthenticationStepDefs.authenticate()))
+                .andDo(print());
     }
 
     @When("The propagator updates the request")
