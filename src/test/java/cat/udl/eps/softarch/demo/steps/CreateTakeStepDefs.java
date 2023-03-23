@@ -9,7 +9,6 @@ import io.cucumber.java.en.When;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Iterator;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -43,11 +42,20 @@ public class CreateTakeStepDefs {
     }
 
     @And("^I try to retrieve that Take$")
-    public void takeHasBeenCreated() throws Exception {
+    public void iTryToRetrieveThatTake() throws Exception {
         stepDefs.result = stepDefs.mockMvc.perform(
                         get(newResourceUri)
                                 .with(AuthenticationStepDefs.authenticate())
                                 .accept(MediaType.APPLICATION_JSON));
+    }
+
+    @When("^I try to retrieve Take with id (\\d+)$")
+    public void iTryToRetrieveTakeWithId(int id) throws Exception {
+        newResourceUri = "/takes/" + id;
+        stepDefs.result = stepDefs.mockMvc.perform(
+                get(newResourceUri)
+                        .with(AuthenticationStepDefs.authenticate())
+                        .accept(MediaType.APPLICATION_JSON));
     }
 
     @And("There is a Take created with amount {int}, weight {int} and location {string}")

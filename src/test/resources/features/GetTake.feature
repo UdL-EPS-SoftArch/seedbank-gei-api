@@ -12,17 +12,17 @@ Feature: Get Take
       | 1       |    2      | Lleida    |2023-03-09T14:30:00+01:00  |
 
   Scenario: Get a new Take as user
-    Given I login as "propagator" with password "password"
+    Given I login as "user" with password "password"
     When I try to retrieve that Take
-    Then The response code is 200
+    Then The response code is 403
 
   Scenario: Get a new Take as admin
-    Given I login as "propagator" with password "password"
+    Given I login as "admin" with password "password"
     When I try to retrieve that Take
     Then The response code is 200
 
   Scenario: Get a new Take as donor
-    Given I login as "propagator" with password "password"
+    Given I login as "donor" with password "password"
     When I try to retrieve that Take
     Then The response code is 200
 
@@ -30,3 +30,28 @@ Feature: Get Take
     Given I login as "propagator" with password "password"
     When I try to retrieve that Take
     Then The response code is 200
+
+  Scenario: Get a new Take that does not exist as user
+    Given I login as "user" with password "password"
+    When I try to retrieve Take with id 1000
+    Then The response code is 403
+
+  Scenario: Get a new Take that does not exist as admin
+    Given I login as "admin" with password "password"
+    When I try to retrieve Take with id 1000
+    Then The response code is 404
+
+  Scenario: Get a new Take that does not exist as donor
+    Given I login as "donor" with password "password"
+    When I try to retrieve Take with id 1000
+    Then The response code is 404
+
+  Scenario: Get a new Take that does not exist as propagator
+    Given I login as "propagator" with password "password"
+    When I try to retrieve Take with id 1000
+    Then The response code is 404
+
+  Scenario: Get a new Take not logged in
+    Given I'm not logged in
+    When I try to retrieve that Take
+    Then The response code is 401
