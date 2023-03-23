@@ -1,16 +1,11 @@
 package cat.udl.eps.softarch.demo.steps;
 
-import cat.udl.eps.softarch.demo.domain.Donor;
-import cat.udl.eps.softarch.demo.domain.Propagator;
-import cat.udl.eps.softarch.demo.domain.Take;
-import cat.udl.eps.softarch.demo.domain.User;
+import cat.udl.eps.softarch.demo.domain.*;
+import cat.udl.eps.softarch.demo.mothers.AdminMother;
 import cat.udl.eps.softarch.demo.mothers.DonorMother;
 import cat.udl.eps.softarch.demo.mothers.PropagatorMother;
 import cat.udl.eps.softarch.demo.mothers.UserMother;
-import cat.udl.eps.softarch.demo.repository.DonorRepository;
-import cat.udl.eps.softarch.demo.repository.PropagatorRepository;
-import cat.udl.eps.softarch.demo.repository.TakeRepository;
-import cat.udl.eps.softarch.demo.repository.UserRepository;
+import cat.udl.eps.softarch.demo.repository.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -22,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.parameters.P;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -54,6 +48,9 @@ public class RegisterStepDefs {
     private UserRepository userRepository;
 
     @Autowired
+    private AdminRepository adminRepository;
+
+    @Autowired
     private PropagatorRepository propagatorRepository;
 
     @Autowired
@@ -69,6 +66,11 @@ public class RegisterStepDefs {
     @Given("^There is a registered user with username \"([^\"]*)\" and password \"([^\"]*)\" and email \"([^\"]*)\"$")
     public void thereIsARegisteredUserWithUsernameAndPasswordAndEmail(String username, String password, String email) {
         registerUser(() -> UserMother.getUserWithEncodingPassword(username, password, email));
+    }
+
+    @Given("^There is a registered admin with username \"([^\"]*)\" and password \"([^\"]*)\" and email \"([^\"]*)\"$")
+    public void thereIsARegisteredAdminWithUsernameAndPasswordAndEmail(String username, String password, String email) {
+        registerAdmin(() -> AdminMother.getAdminWithEncodingPassword(username, password, email));
     }
 
     @Given("^There is a valid registered user with username \"([^\"]*)\"")
@@ -190,6 +192,10 @@ public class RegisterStepDefs {
 
     private void registerUser(Supplier<User> userGenerator) {
         register(userGenerator.get(), userRepository);
+    }
+
+    private void registerAdmin(Supplier<Admin> adminGenerator) {
+        register(adminGenerator.get(), adminRepository);
     }
 
     private void registerDonor(Supplier<Donor> donorGenerator) {
