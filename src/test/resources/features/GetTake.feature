@@ -10,7 +10,6 @@ Feature: Get Take
     Given There is a registered propagator with username "propagator" and password "password" and email "propagator@sample.app" with the following takes
       | amount  |  weight   | location  | date                      |
       | 1       |    2      | Lleida    |2023-03-09T14:30:00+01:00  |
-    Given There is a Take created with amount 5, weight 5 and location "Lleida"
 
   Scenario: Get a new Take as user
     Given I login as "propagator" with password "password"
