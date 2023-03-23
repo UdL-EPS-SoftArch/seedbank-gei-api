@@ -49,7 +49,8 @@ public class CreateTakeStepDefs {
                                 .with(AuthenticationStepDefs.authenticate())
                                 .accept(MediaType.APPLICATION_JSON));
     }
-    /*@And("There is a Take created with amount {int}, weight {int} and location {string}")
+
+    @And("There is a Take created with amount {int}, weight {int} and location {string}")
     public void thereIsATakeCreatedWithAmountWeightAndLocation(int amount, int weight, String location) {
         Take take = new Take();
         take.setAmount(amount);
@@ -61,7 +62,7 @@ public class CreateTakeStepDefs {
         take = (Take) it.next();
         take = (Take) it.next();
         CreateTakeStepDefs.newResourceUri = "/takes/" + take.getId();
-    }*/
+    }
     
     @When("^I create a new Take with empty body$")
     public void createTakeEmptyBody() throws Throwable {
