@@ -1,6 +1,8 @@
 package cat.udl.eps.softarch.demo.steps;
 
+import cat.udl.eps.softarch.demo.domain.Propagator;
 import cat.udl.eps.softarch.demo.domain.Take;
+import cat.udl.eps.softarch.demo.repository.PropagatorRepository;
 import cat.udl.eps.softarch.demo.repository.TakeRepository;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.When;
@@ -18,6 +20,9 @@ public class CreateTakeStepDefs {
     @Autowired
     private TakeRepository takeRepository;
     @Autowired
+    private PropagatorRepository propagatorRepository;
+
+    @Autowired
     private StepDefs stepDefs;
     @When("^I create a new Take with amount (\\d+), weight (\\d+) and location \"([^\"]*\")$")
     public void iCreateANewTake(Integer amount, Integer weight, String location) throws Throwable {
@@ -25,7 +30,8 @@ public class CreateTakeStepDefs {
         take.setAmount(amount);
         take.setWeight(new BigDecimal(weight));
         take.setLocation(location);
-
+        Iterable<Propagator> listOfPropagator = propagatorRepository.findAll();
+        System.out.println(listOfPropagator.iterator().next().getUsername());
         stepDefs.result = stepDefs.mockMvc.perform(
                 post("/takes")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -36,12 +42,22 @@ public class CreateTakeStepDefs {
     }
 
     @And("^I try to retrieve that Take$")
-    public void takeHasBeenCreated() throws Exception {
+    public void iTryToRetrieveThatTake() throws Exception {
         stepDefs.result = stepDefs.mockMvc.perform(
                         get(newResourceUri)
                                 .with(AuthenticationStepDefs.authenticate())
                                 .accept(MediaType.APPLICATION_JSON));
     }
+
+    @When("^I try to retrieve Take with id (\\d+)$")
+    public void iTryToRetrieveTakeWithId(int id) throws Exception {
+        newResourceUri = "/takes/" + id;
+        stepDefs.result = stepDefs.mockMvc.perform(
+                get(newResourceUri)
+                        .with(AuthenticationStepDefs.authenticate())
+                        .accept(MediaType.APPLICATION_JSON));
+    }
+
     @And("There is a Take created with amount {int}, weight {int} and location {string}")
     public void thereIsATakeCreatedWithAmountWeightAndLocation(int amount, int weight, String location) {
         Take take = new Take();
@@ -55,6 +71,7 @@ public class CreateTakeStepDefs {
         take = (Take) it.next();
         CreateTakeStepDefs.newResourceUri = "/takes/" + take.getId();
     }
+    
     @When("^I create a new Take with empty body$")
     public void createTakeEmptyBody() throws Throwable {
         stepDefs.result = stepDefs.mockMvc.perform(
