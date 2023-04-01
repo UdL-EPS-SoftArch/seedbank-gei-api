@@ -10,10 +10,10 @@ Feature: Get Seed
   Scenario: Get a Seed
     Given I login as "username" with password "password"
     And I create a new Seed with scientificName "Allium cepa" and commonName "Onion, Cebolla"
-    When I try to retrieve a Seed
+    When I try to retrieve a Seed with id 1
     Then The response code is 200
 
   Scenario: Get a Seed which does not exist
     Given I login as "username" with password "password"
-    When I try to retrieve the Seed
+    When I try to retrieve a Seed with id 1
     Then The response code is 404
