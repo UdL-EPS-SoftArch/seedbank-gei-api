@@ -5,7 +5,7 @@ Feature: Get Seed
 
   Background:
     Given There is a registered user with username "username" and password "password" and email "user@sample.app"
-    And There is already a seed with id 1, scientificName "Allium cepa" and commonName "Onion, Cebolla"
+    And There is already a Seed with id 1, scientificName "Allium cepa" and commonName "Onion, Cebolla"
 
   Scenario: Get a Seed
     Given I login as "username" with password "password"

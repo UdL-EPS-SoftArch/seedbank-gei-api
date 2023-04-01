@@ -38,7 +38,7 @@ public class CreateSeedStepDefs {
         newResourceUri = stepDefs.result.andReturn().getResponse().getHeader("Location");
     }
 
-    @And("There is already a seed with id {int}, scientificName {string} and commonName {string}")
+    @And("There is already a Seed with id {int}, scientificName {string} and commonName {string}")
     public void thereIsAlreadyASeedWithIdScientificNameAndCommonName(Long id, String scientificName, String commonName) throws Throwable {
         Seed seed = new Seed();
         seed.setId(id);
