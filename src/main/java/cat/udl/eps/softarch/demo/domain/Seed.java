@@ -19,6 +19,7 @@ public class Seed {
 
     @NotNull
     @NotBlank
+    @Column(unique = true)
     private String scientificName;
 
     @NotNull
