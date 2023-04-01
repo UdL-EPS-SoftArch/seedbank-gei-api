@@ -53,7 +53,7 @@ public class CreateSeedStepDefs {
                         .with(AuthenticationStepDefs.authenticate())
         );
     }
-    
+
     @And("There is {int} Seed created")
     public void thereIsSeedCreated(int seedCreatedNum) {
         Assert.assertEquals(seedCreatedNum, seedRepository.count());

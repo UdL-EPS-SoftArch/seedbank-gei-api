@@ -18,4 +18,8 @@ public class GetSeedStepDefs {
                         .accept(MediaType.APPLICATION_JSON));
     }
 
+    @When("I try to retrieve a Seed with id {int}")
+    public void iTryToRetrieveASeedWithId(Long id) {
+
+    }
 }
