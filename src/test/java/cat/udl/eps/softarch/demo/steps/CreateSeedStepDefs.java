@@ -2,10 +2,13 @@ package cat.udl.eps.softarch.demo.steps;
 
 import cat.udl.eps.softarch.demo.domain.Seed;
 import cat.udl.eps.softarch.demo.repository.SeedRepository;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.When;
+import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 import java.util.Arrays;
@@ -26,12 +29,35 @@ public class CreateSeedStepDefs {
         seed.setCommonName(commonNames);
 
         stepDefs.result = stepDefs.mockMvc.perform(
-                post("/seed")
+                post("/seeds")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(stepDefs.mapper.writeValueAsString(seed))
                         .with(AuthenticationStepDefs.authenticate())
 
         );
         newResourceUri = stepDefs.result.andReturn().getResponse().getHeader("Location");
+    }
+
+    @And("There is {int} Seed created")
+    public void thereIsSeedCreated(int seedCreatedNum) {
+        Assert.assertEquals(seedCreatedNum, seedRepository.count());
+    }
+
+    @And("I try to retrieve that Seed")
+    public void retrieveSeed() throws Exception {
+        stepDefs.result = stepDefs.mockMvc.perform (
+                get(newResourceUri)
+                        .with(AuthenticationStepDefs.authenticate())
+                        .accept(MediaType.APPLICATION_JSON));
+    }
+
+    @When("^I create a new Seed with empty body$")
+    public void createSeedWithEmptyBody() throws Throwable {
+        stepDefs.result = stepDefs.mockMvc.perform(
+                post("/seed")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(stepDefs.mapper.writeValueAsString(null))
+                        .with(AuthenticationStepDefs.authenticate())
+        );
     }
 }
