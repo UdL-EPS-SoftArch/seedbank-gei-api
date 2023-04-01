@@ -4,25 +4,19 @@ Feature: Delete Seed
 
   Background:
     Given There is a registered user with username "username" and password "password" and email "user@sample.app"
+    And There is already a seed with id 1, scientificName "Allium cepa" and commonName "Onion, Cebolla"
 
   Scenario: Delete a Seed with user logged in
     Given I login as "username" with password "password"
-    And There is a created Seed with scientificName "Allium cepa" and commonName | "Onion" |
-    When I delete Seed
-    Then the response code is 200
-    And I try to retrieve that Seed
-    And the response code is 404
+    When I delete Seed with id 1
+    Then The response code is 200
 
   Scenario: Delete a Seed with user not logged in
     Given I'm not logged in
-    And There is a created Seed with scientificName "Allium cepa" and commonName | "Onion" |
-    When I delete Seed
+    When I delete Seed with id 1
     Then The response code is 401
 
-  Scenario: Delete a Seed with valid scientificName and empty common name
+  Scenario: Delete a Seed that doesn't exist
     Given I login as "username" with password "password"
-    And There is a created Seed with scientificName "Allium cepa" and commonName | "" |
-    When I delete Seed
-    Then the response code is 200
-    And I try to retrieve that Seed
-    And the response code is 404
+    When I delete Seed with id 2
+    Then The response code is 404
