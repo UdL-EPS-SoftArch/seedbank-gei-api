@@ -2,7 +2,9 @@ package cat.udl.eps.softarch.demo.steps;
 
 import cat.udl.eps.softarch.demo.domain.Seed;
 import cat.udl.eps.softarch.demo.repository.SeedRepository;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.When;
+import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
@@ -34,4 +36,10 @@ public class CreateSeedStepDefs {
         );
         newResourceUri = stepDefs.result.andReturn().getResponse().getHeader("Location");
     }
+
+    @And("There is {int} Seed created")
+    public void thereIsSeedCreated(int seedCreatedNum) {
+        Assert.assertEquals(seedCreatedNum, seedRepository.count());
+    }
+
 }
