@@ -8,12 +8,13 @@ import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.List;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 public class CreateSeedStepDefs {
     @Autowired
@@ -22,7 +23,7 @@ public class CreateSeedStepDefs {
     private SeedRepository seedRepository;
     public static String newResourceUri;
 
-    @When("I create a new Seed with scientificName {string} and commonName {string}")
+    @When("I create a new Seed with scientificName \"([^\"]*)\" and commonName \"([^\"]*)\"$")
     public void iCreateANewSeedWithScientificNameAndCommonName(String scientificName, String commonName) throws Throwable {
         Seed seed = new Seed();
         seed.setScientificName(scientificName);
@@ -33,26 +34,23 @@ public class CreateSeedStepDefs {
                 post("/seeds")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(stepDefs.mapper.writeValueAsString(seed))
-                        .with(AuthenticationStepDefs.authenticate())
-
-        );
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(AuthenticationStepDefs.authenticate()))
+                .andDo(print());
         newResourceUri = stepDefs.result.andReturn().getResponse().getHeader("Location");
     }
 
-    @And("There is already a Seed with id {int}, scientificName {string} and commonName {string}")
-    public void thereIsAlreadyASeedWithIdScientificNameAndCommonName(Long id, String scientificName, String commonName) throws Throwable {
-        if(seedRepository.existsById(id)) {
-            return;
-        }
+    @And("There is already a seed with scientificName \"([^\"]*)\" and commonName \"([^\"]*)\"$")
+    public void thereIsAlreadyASeedWithIdScientificNameAndCommonName(String scientificName, String commonName) throws Throwable {
         Seed seed = new Seed();
-        seed.setId(id);
         seed.setScientificName(scientificName);
         List<String> commonNames = Arrays.asList(commonName.split(", ", -1));
         seed.setCommonName(commonNames);
         seedRepository.save(seed);
     }
 
-    @And("There is {int} Seed created")
+    @And("There is (\\d+) Seed created$")
     public void thereIsSeedCreated(int seedCreatedNum) {
         Assert.assertEquals(seedCreatedNum, seedRepository.count());
     }
@@ -68,7 +66,7 @@ public class CreateSeedStepDefs {
     @When("^I create a new Seed with empty body$")
     public void createSeedWithEmptyBody() throws Throwable {
         stepDefs.result = stepDefs.mockMvc.perform(
-                post("/seed")
+                post("/seeds")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(stepDefs.mapper.writeValueAsString(null))
                         .with(AuthenticationStepDefs.authenticate())

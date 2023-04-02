@@ -3,15 +3,21 @@ package cat.udl.eps.softarch.demo.steps;
 import cat.udl.eps.softarch.demo.domain.Seed;
 import cat.udl.eps.softarch.demo.repository.SeedRepository;
 import io.cucumber.java.en.When;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
+import javax.transaction.Transactional;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 
 public class UpdateSeedStepDefs {
     @Autowired
@@ -19,41 +25,37 @@ public class UpdateSeedStepDefs {
 
     @Autowired
     private SeedRepository seedRepository;
-    @When("I update Seed with id {int} by changing scientificName to {string} and commonName to {string}")
-    public void iUpdateSeedWithIdByChangingScientificNameToAndCommonNameTo(int id, String scientificName, String commonName) throws Throwable {
-        Seed seed = seedRepository.findById(id).get(0);
-        Long seedId = seed.getId();
+
+    @Transactional
+    @When("I update seed with scientific name \"([^\"]*)\" by changing it to \"([^\"]*)\" and commonName to \"([^\"]*)\"$")
+    public void iUpdateSeedWithIdByChangingScientificNameToAndCommonNameTo(
+            String scientificName, String newScientificName, String commonName) throws Throwable {
+        Optional<Seed> optionalSeed = seedRepository.findByScientificName(scientificName);
 
         JSONObject modifySeed = new JSONObject();
-        modifySeed.put("scientificName", scientificName);
-        modifySeed.put("commonName", Arrays.asList(commonName.split(", ", -1)));
+        modifySeed.put("scientificName", newScientificName);
+        if (commonName != null)
+            modifySeed.put("commonName", new JSONArray(commonName.split(", ", -1)));
 
-        stepDefs.result = stepDefs.mockMvc.perform(patch("/seeds/{id}", seedId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(modifySeed.toString())
-                .accept(MediaType.APPLICATION_JSON)
-                .with(AuthenticationStepDefs.authenticate()));
+        stepDefs.result = stepDefs.mockMvc.perform(
+                patch("/seeds/{id}", optionalSeed.isPresent() ? optionalSeed.get().getId() : "999")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(modifySeed.toString())
+                    .accept(MediaType.APPLICATION_JSON)
+                    .characterEncoding(StandardCharsets.UTF_8)
+                    .with(AuthenticationStepDefs.authenticate())).andDo(print());
 
-        JSONObject updateSeedJSON = new JSONObject(stepDefs.result.andReturn().getResponse().getContentAsString());
-        Assert.assertEquals(scientificName, updateSeedJSON.get("scientificName"));
-        Assert.assertEquals(Arrays.asList(commonName.split(", ", -1)), updateSeedJSON.get("scientificName"));
+        if (stepDefs.result.andReturn().getResponse().getStatus() == 200) {
+            JSONObject updateSeedJSON = new JSONObject(stepDefs.result.andReturn().getResponse().getContentAsString());
+            Assert.assertEquals(newScientificName, updateSeedJSON.get("scientificName"));
+            if (commonName != null)
+                Assert.assertEquals(new JSONArray(commonName.split(", ", -1)), updateSeedJSON.get("commonName"));
+        }
     }
 
-    @When("I update Seed with id {int} by changing scientificName to {string}")
-    public void iUpdateSeedWithIdByChangingScientificNameTo(int id, String scientificName) throws Throwable{
-        Seed seed = seedRepository.findById(id).get(0);
-        Long seedId = seed.getId();
-
-        JSONObject modifySeed = new JSONObject();
-        modifySeed.put("scientificName", scientificName);
-
-        stepDefs.result = stepDefs.mockMvc.perform(patch("/seeds/{id}", seedId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(modifySeed.toString())
-                .accept(MediaType.APPLICATION_JSON)
-                .with(AuthenticationStepDefs.authenticate()));
-
-        JSONObject updateSeedJSON = new JSONObject(stepDefs.result.andReturn().getResponse().getContentAsString());
-        Assert.assertEquals(scientificName, updateSeedJSON.get("scientificName"));
+    @When("I update seed with scientific name \"([^\"]*)\" by changing it to \"([^\"]*)\"$")
+    public void iUpdateSeedWithIdByChangingScientificNameTo(
+            String scientificName, String newScientificName) throws Throwable{
+        iUpdateSeedWithIdByChangingScientificNameToAndCommonNameTo(scientificName, newScientificName, null);
     }
 }
