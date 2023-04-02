@@ -19,7 +19,10 @@ public class GetSeedStepDefs {
     }
 
     @When("I try to retrieve a Seed with id {int}")
-    public void iTryToRetrieveASeedWithId(Long id) {
-
+    public void iTryToRetrieveASeedWithId(Long id) throws Throwable {
+        stepDefs.result = stepDefs.mockMvc.perform(
+                get("/seeds/{id}", id)
+                        .with(AuthenticationStepDefs.authenticate())
+                        .accept(MediaType.APPLICATION_JSON));
     }
 }
