@@ -23,5 +23,5 @@ Feature: Update Seed
 
   Scenario: Update a Seed that does not exist
     Given I'm not logged in
-    When I update Seed with id 2 by changing scientificName to "Allium Cepa" and commonName to "Onion, Cebolla"
+    When I update Seed with id -1 by changing scientificName to "Allium Cepa" and commonName to "Onion, Cebolla"
     Then The response code is 404

@@ -18,5 +18,5 @@ Feature: Delete Seed
 
   Scenario: Delete a Seed that doesn't exist
     Given I login as "username" with password "password"
-    When I delete Seed with id 2
+    When I delete Seed with id -1
     Then The response code is 404
