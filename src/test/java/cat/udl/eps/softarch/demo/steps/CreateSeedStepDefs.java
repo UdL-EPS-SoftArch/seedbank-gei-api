@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 public class CreateSeedStepDefs {
@@ -40,18 +41,15 @@ public class CreateSeedStepDefs {
 
     @And("There is already a Seed with id {int}, scientificName {string} and commonName {string}")
     public void thereIsAlreadyASeedWithIdScientificNameAndCommonName(Long id, String scientificName, String commonName) throws Throwable {
+        if(seedRepository.existsById(id)) {
+            return;
+        }
         Seed seed = new Seed();
         seed.setId(id);
         seed.setScientificName(scientificName);
         List<String> commonNames = Arrays.asList(commonName.split(", ", -1));
         seed.setCommonName(commonNames);
-
-        stepDefs.result = stepDefs.mockMvc.perform(
-                post("/seeds/{id}", id)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(stepDefs.mapper.writeValueAsString(seed))
-                        .with(AuthenticationStepDefs.authenticate())
-        );
+        seedRepository.save(seed);
     }
 
     @And("There is {int} Seed created")
