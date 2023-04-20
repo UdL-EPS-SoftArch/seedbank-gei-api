@@ -52,7 +52,7 @@ public class DBInitialization {
 
         }
 
-        if (Arrays.asList(activeProfiles.split(",")).contains("admintest")) {
+        if (Arrays.asList(activeProfiles.split(",")).contains("test")) {
             // Testing instances
             if (!userRepository.existsById("admintest")) {
                 User user = new Admin();
