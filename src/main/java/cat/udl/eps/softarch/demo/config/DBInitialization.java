@@ -1,7 +1,6 @@
 package cat.udl.eps.softarch.demo.config;
-import cat.udl.eps.softarch.demo.domain.Admin;
-import cat.udl.eps.softarch.demo.domain.Take;
-import cat.udl.eps.softarch.demo.domain.User;
+import cat.udl.eps.softarch.demo.domain.*;
+import cat.udl.eps.softarch.demo.repository.PropagatorRepository;
 import cat.udl.eps.softarch.demo.repository.UserRepository;
 import cat.udl.eps.softarch.demo.repository.TakeRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,24 +19,27 @@ public class DBInitialization {
     private final UserRepository userRepository;
     private final TakeRepository takeRepository;
 
-    public DBInitialization(UserRepository userRepository, TakeRepository takeRepository) {
+    private final PropagatorRepository propagatorRepository;
+
+    public DBInitialization(UserRepository userRepository, TakeRepository takeRepository, PropagatorRepository propagatorRepository) {
         this.userRepository = userRepository;
         this.takeRepository = takeRepository;
+        this.propagatorRepository = propagatorRepository;
     }
 
     @PostConstruct
     public void initializeDatabase() {
-        // Default user
-        if (!userRepository.existsById("demo")) {
-            User user = new User();
-            user.setEmail("demo@sample.app");
-            user.setUsername("demo");
-            user.setPassword(defaultPassword);
-            user.encodePassword();
-            userRepository.save(user);
-        }
         if (Arrays.asList(activeProfiles.split(",")).contains("test")) {
             // Testing instances
+            Propagator propagator = new Propagator();
+            if (!userRepository.existsById("propagator")) {
+                propagator.setEmail("propagator@sample.app");
+                propagator.setUsername("propagator");
+                propagator.setPassword(defaultPassword);
+                propagator.encodePassword();
+                propagatorRepository.save(propagator);
+            }
+
             if (!userRepository.existsById("test")) {
                 User user = new User();
                 user.setEmail("test@sample.app");
@@ -47,12 +49,15 @@ public class DBInitialization {
                 userRepository.save(user);
             }
 
-            createSampleTakes();
+            if (!userRepository.existsById("donor")) {
+                Donor donor = new Donor();
+                donor.setEmail("donor@sample.app");
+                donor.setUsername("donor");
+                donor.setPassword(defaultPassword);
+                donor.encodePassword();
+                userRepository.save(donor);
+            }
 
-
-        }
-
-        if (Arrays.asList(activeProfiles.split(",")).contains("test")) {
             // Testing instances
             if (!userRepository.existsById("admintest")) {
                 User user = new Admin();
@@ -62,23 +67,27 @@ public class DBInitialization {
                 user.encodePassword();
                 userRepository.save(user);
             }
-            createSampleTakes();
+
+            createSampleTakes(propagator);
+
 
         }
     }
 
-    private void createSampleTakes() {
+    private void createSampleTakes(Propagator propagator) {
         Take take = new Take();
         take.setAmount(6);
         take.setWeight(BigDecimal.TEN);
         take.setLocation("Barcelona");
         take.setDate(ZonedDateTime.now());
+        take.setTakePropagator(propagator);
         takeRepository.save(take);
         Take take2 = new Take();
         take2.setAmount(60);
         take2.setWeight(BigDecimal.TEN);
         take2.setLocation("Lleida");
         take2.setDate(ZonedDateTime.now());
+        take2.setTakePropagator(propagator);
         takeRepository.save(take2);
         Take take3 = new Take();
         take3.setAmount(12);
