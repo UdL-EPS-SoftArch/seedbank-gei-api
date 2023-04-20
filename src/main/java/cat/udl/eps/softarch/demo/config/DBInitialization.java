@@ -3,6 +3,7 @@ package cat.udl.eps.softarch.demo.config;
 import cat.udl.eps.softarch.demo.domain.User;
 import cat.udl.eps.softarch.demo.mothers.DonationMother;
 import cat.udl.eps.softarch.demo.mothers.DonorMother;
+import cat.udl.eps.softarch.demo.mothers.RequestMother;
 import cat.udl.eps.softarch.demo.mothers.PropagatorMother;
 import cat.udl.eps.softarch.demo.mothers.TakeMother;
 import cat.udl.eps.softarch.demo.repository.*;
@@ -19,17 +20,19 @@ public class DBInitialization {
     private final TakeRepository takeRepository;
     private final PropagatorRepository propagatorRepository;
     private final DonationRepository donationRepository;
+    private final RequestRepository requestRepository;
     @Value("${default-password}")
     String defaultPassword;
     @Value("${spring.profiles.active:}")
     private String activeProfiles;
 
-    public DBInitialization(UserRepository userRepository, DonorRepository donorRepository, TakeRepository takeRepository, PropagatorRepository propagatorRepository, DonationRepository donationRepository) {
+    public DBInitialization(UserRepository userRepository, DonorRepository donorRepository, TakeRepository takeRepository, PropagatorRepository propagatorRepository, DonationRepository donationRepository, RequestRepository requestRepository) {
         this.userRepository = userRepository;
         this.donorRepository = donorRepository;
         this.takeRepository = takeRepository;
         this.propagatorRepository = propagatorRepository;
         this.donationRepository = donationRepository;
+        this.requestRepository = requestRepository;
     }
 
     @PostConstruct
@@ -56,6 +59,9 @@ public class DBInitialization {
         // Default donation
         var donation = DonationMother.getValidDonationFor(donor, take);
         donationRepository.save(donation);
+        // Default request
+        var request = RequestMother.getValidRequestFor(propagator, take);
+        requestRepository.save(request);
         if (Arrays.asList(activeProfiles.split(",")).contains("test")) {
             // Testing instances
             if (!userRepository.existsById("test")) {
