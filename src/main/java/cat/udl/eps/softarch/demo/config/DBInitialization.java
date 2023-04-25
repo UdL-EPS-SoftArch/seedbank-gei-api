@@ -19,7 +19,7 @@ public class DBInitialization {
     private final RequestRepository requestRepository;
     @Value("${default-password}")
     String defaultPassword;
-    @Value("${spring.profiles.active:}")
+    @Value("${spring.profiles.active:test}") // if profile is not set, use test
     private String activeProfiles;
 
     public DBInitialization(UserRepository userRepository, DonorRepository donorRepository, TakeRepository takeRepository, PropagatorRepository propagatorRepository, DonationRepository donationRepository, RequestRepository requestRepository) {
@@ -52,7 +52,7 @@ public class DBInitialization {
                 userRepository.save(user);
             }
         }
-        if (isProfileActive("flyio") || isProfileActive("local")) {
+        if (isProfileActive("prod") && !isProfileActive("test")) {
             // Default donor
             var donor = DonorMother.getValidDonorWith("donor1");
             if (!donorRepository.existsById("donor1")) donorRepository.save(donor);
