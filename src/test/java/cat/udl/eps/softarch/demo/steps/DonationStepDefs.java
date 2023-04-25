@@ -41,7 +41,6 @@ public class DonationStepDefs {
     private Donation donation;
 
     private String previousLocation;
-    private final String updatedLocation = "Madrid";
 
     @And("User {string} is the donor")
     public void thereIsAValidDonor(String name) {
@@ -84,10 +83,11 @@ public class DonationStepDefs {
     public void theDonorUpdatesTheDonation() throws Exception {
         donation = donationRepository.findAll().iterator().next();
         previousLocation = donation.getLocation();
+        var newLocation = DonationMother.getDifferentLocationFrom(donation);
         stepDefs.result = stepDefs.mockMvc.perform(patch("/donations/{id}", donation.getId())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .characterEncoding("utf-8")
-                .content(new JSONObject().put("location", updatedLocation).toString())
+                .content(new JSONObject().put("location", newLocation).toString())
                 .accept(MediaType.APPLICATION_JSON).with(AuthenticationStepDefs
                         .authenticate()))
                 .andDo(print());

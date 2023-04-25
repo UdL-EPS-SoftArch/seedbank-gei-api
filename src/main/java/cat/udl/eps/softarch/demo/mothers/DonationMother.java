@@ -10,15 +10,22 @@ import java.time.ZonedDateTime;
 
 public class DonationMother {
 
+    private static final String location = "Barcelona";
+    private static final String otherLocation = "Madrid";
+
     public static Donation getValidDonationFor(@Nullable Donor donor, @Nullable Take take) {
         var donation = new Donation();
         donation.setDonor(donor);
         donation.setTakenBy(take);
         donation.setAmount(1);
         donation.setWeight(BigDecimal.ONE);
-        donation.setLocation("Barcelona");
+        donation.setLocation(location);
         donation.setDate(ZonedDateTime.now());
         return donation;
+    }
+
+    public static String getDifferentLocationFrom(Donation donation) {
+        return donation.getLocation().equals(location) ? otherLocation : location;
     }
 
 }
