@@ -5,14 +5,11 @@ import cat.udl.eps.softarch.demo.repository.SeedRepository;
 import io.cucumber.java.en.When;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import javax.transaction.Transactional;
-import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 public class DeleteSeedStepDefs {
     @Autowired
@@ -22,11 +19,11 @@ public class DeleteSeedStepDefs {
 
     @Transactional
     @When("I delete the seed with scientific name \"([^\"]*)\"$")
-    public void iDeleteSeedWithId(String scientificName) throws Throwable  {
+    public void iDeleteSeedWithId(String scientificName) throws Throwable {
         var seed = seedRepository.findByScientificName(scientificName);
-        assertTrue(seed.isPresent());
+        var identifier = seed.map(Seed::getId).orElse(-1L); // arbitrary value for non-existent seed
         stepDefs.result = stepDefs.mockMvc.perform(
-                delete("/seeds/{id}", seed.get().getId())
+                delete("/seeds/{id}", identifier)
                         .accept(MediaType.APPLICATION_JSON)
                         .with(AuthenticationStepDefs.authenticate())
         ).andDo(print());
