@@ -1,11 +1,7 @@
 package cat.udl.eps.softarch.demo.config;
 
 import cat.udl.eps.softarch.demo.domain.User;
-import cat.udl.eps.softarch.demo.mothers.DonationMother;
-import cat.udl.eps.softarch.demo.mothers.DonorMother;
-import cat.udl.eps.softarch.demo.mothers.RequestMother;
-import cat.udl.eps.softarch.demo.mothers.PropagatorMother;
-import cat.udl.eps.softarch.demo.mothers.TakeMother;
+import cat.udl.eps.softarch.demo.mothers.*;
 import cat.udl.eps.softarch.demo.repository.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -46,24 +42,7 @@ public class DBInitialization {
             user.encodePassword();
             userRepository.save(user);
         }
-        // Default donor
-        var donor = DonorMother.getValidDonorWith("donor1");
-        if (!donorRepository.existsById("donor1")) donorRepository.save(donor);
-        // Default propagator
-        var propagator = PropagatorMother.getValidPropagatorWith("propagator1");
-        propagatorRepository.save(propagator);
-        // Default take
-        var take = TakeMother.getValidTake();
-        take.setTakePropagator(propagator);
-        takeRepository.save(take);
-        // Default donation
-        var donation = DonationMother.getValidDonationFor(donor, take);
-        donationRepository.save(donation);
-        // Default request
-        var request = RequestMother.getValidRequestFor(propagator, take);
-        requestRepository.save(request);
-        if (Arrays.asList(activeProfiles.split(",")).contains("test")) {
-            // Testing instances
+        if (isProfileActive("test")) {
             if (!userRepository.existsById("test")) {
                 User user = new User();
                 user.setEmail("test@sample.app");
@@ -73,5 +52,27 @@ public class DBInitialization {
                 userRepository.save(user);
             }
         }
+        if (isProfileActive("flyio") || isProfileActive("local")) {
+            // Default donor
+            var donor = DonorMother.getValidDonorWith("donor1");
+            if (!donorRepository.existsById("donor1")) donorRepository.save(donor);
+            // Default propagator
+            var propagator = PropagatorMother.getValidPropagatorWith("propagator1");
+            propagatorRepository.save(propagator);
+            // Default take
+            var take = TakeMother.getValidTake();
+            take.setTakePropagator(propagator);
+            takeRepository.save(take);
+            // Default donation
+            var donation = DonationMother.getValidDonationFor(donor, take);
+            donationRepository.save(donation);
+            // Default request
+            var request = RequestMother.getValidRequestFor(propagator, take);
+            requestRepository.save(request);
+        }
+    }
+
+    private Boolean isProfileActive(String activeProfile) {
+        return Arrays.asList(activeProfiles.split(",")).contains(activeProfile);
     }
 }
