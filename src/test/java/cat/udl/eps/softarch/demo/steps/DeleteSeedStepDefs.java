@@ -10,6 +10,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import javax.transaction.Transactional;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 
@@ -22,9 +23,10 @@ public class DeleteSeedStepDefs {
     @Transactional
     @When("I delete the seed with scientific name \"([^\"]*)\"$")
     public void iDeleteSeedWithId(String scientificName) throws Throwable  {
-        Optional<Seed> optionalSeed = seedRepository.findByScientificName(scientificName);
+        Optional<Seed> seed = seedRepository.findByScientificName(scientificName);
+        assertTrue(seed.isPresent());
         stepDefs.result = stepDefs.mockMvc.perform(
-                delete("/seeds/{id}", optionalSeed.isPresent() ? optionalSeed.get().getId() : "999")
+                delete("/seeds/{id}", seed.get().getId())
                         .accept(MediaType.APPLICATION_JSON)
                         .with(AuthenticationStepDefs.authenticate())
         ).andDo(print());
