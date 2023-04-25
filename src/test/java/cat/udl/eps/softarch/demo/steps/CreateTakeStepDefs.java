@@ -2,6 +2,7 @@ package cat.udl.eps.softarch.demo.steps;
 
 import cat.udl.eps.softarch.demo.domain.Propagator;
 import cat.udl.eps.softarch.demo.domain.Take;
+import cat.udl.eps.softarch.demo.mothers.TakeMother;
 import cat.udl.eps.softarch.demo.repository.PropagatorRepository;
 import cat.udl.eps.softarch.demo.repository.TakeRepository;
 import io.cucumber.java.en.And;
@@ -31,8 +32,6 @@ public class CreateTakeStepDefs {
         take.setAmount(amount);
         take.setWeight(new BigDecimal(weight));
         take.setLocation(location);
-        Iterable<Propagator> listOfPropagator = propagatorRepository.findAll();
-        System.out.println(listOfPropagator.iterator().next().getUsername());
         stepDefs.result = stepDefs.mockMvc.perform(
                 post("/takes")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -68,7 +67,6 @@ public class CreateTakeStepDefs {
         take.setAmount(amount);
         take.setWeight(new BigDecimal(weight));
         take.setLocation(location);
-        System.out.println(take.getId());
         takeRepository.save(take);
         Iterator it = takeRepository.findAll().iterator();
         take = (Take) it.next();

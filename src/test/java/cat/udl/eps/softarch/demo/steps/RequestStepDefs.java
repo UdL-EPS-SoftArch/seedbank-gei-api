@@ -85,7 +85,7 @@ public class RequestStepDefs {
 
     @When("The propagator removes the request")
     public void thePropagatorRemovesTheRequest() throws Exception {
-        Request request = requestRepository.findAll().iterator().next();
+        var request = requestRepository.findAll().iterator().next();
         stepDefs.result = stepDefs.mockMvc.perform(
                 delete("/requests/{id}", request.getId())
                         .characterEncoding("utf-8")
@@ -96,7 +96,7 @@ public class RequestStepDefs {
 
     @When("The propagator updates the request")
     public void thePropagatorUpdatesTheRequest() throws Exception {
-        Request request = requestRepository.findAll().iterator().next();
+        var request = requestRepository.findAll().iterator().next();
         previousLocation = request.getLocation();
         stepDefs.result = stepDefs.mockMvc.perform(patch("/requests/{id}", request.getId())
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -109,7 +109,7 @@ public class RequestStepDefs {
 
     @And("The new request is updated")
     public void theNewRequestIsUpdated() {
-        Request request = requestRepository.findAll().iterator().next();
+        var request = requestRepository.findAll().iterator().next();
         assertNotEquals(previousLocation, request.getLocation());
     }
 
@@ -127,9 +127,9 @@ public class RequestStepDefs {
 
     @And("The new request is not updated")
     public void theNewRequestIsNotUpdated() {
-        Request expectedRequest = request;
+        var expectedRequest = request;
         request = requestRepository.findAll().iterator().next();
-        Request actualRequest = request;
+        var actualRequest = request;
         assertEquals(expectedRequest, actualRequest);
     }
 

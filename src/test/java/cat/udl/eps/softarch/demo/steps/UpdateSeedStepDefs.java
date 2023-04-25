@@ -30,7 +30,7 @@ public class UpdateSeedStepDefs {
     @When("I update seed with scientific name \"([^\"]*)\" by changing it to \"([^\"]*)\" and commonName to \"([^\"]*)\"$")
     public void iUpdateSeedWithIdByChangingScientificNameToAndCommonNameTo(
             String scientificName, String newScientificName, String commonName) throws Throwable {
-        Optional<Seed> optionalSeed = seedRepository.findByScientificName(scientificName);
+        var optionalSeed = seedRepository.findByScientificName(scientificName);
 
         JSONObject modifySeed = new JSONObject();
         modifySeed.put("scientificName", newScientificName);

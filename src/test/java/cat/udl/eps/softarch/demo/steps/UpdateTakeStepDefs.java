@@ -31,7 +31,7 @@ public class UpdateTakeStepDefs {
     @When("^I update Take changing amount to (\\d+)$")
     public void iUpdateTakeChangingAmountTo(int newAmount) throws Throwable {
         this.newAmount = newAmount;
-        JSONObject modifyTake = new JSONObject();
+        var modifyTake = new JSONObject();
         modifyTake.put("amount", newAmount);
         stepDefs.result = stepDefs.mockMvc.perform(patch(CreateTakeStepDefs.newResourceUri)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -42,7 +42,7 @@ public class UpdateTakeStepDefs {
 
     @And("^I check that Take has been succesfully updated")
     public void iCheckThatTakeHasBeenSuccesfullyUpdated() throws Throwable {
-        JSONObject updateTakeJSON = new JSONObject(stepDefs.result.andReturn().getResponse().getContentAsString());
+        var updateTakeJSON = new JSONObject(stepDefs.result.andReturn().getResponse().getContentAsString());
         Assert.assertEquals(newAmount, updateTakeJSON.get("amount"));
     }
 

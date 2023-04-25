@@ -121,7 +121,7 @@ public class RegisterStepDefs {
     }
     @Given("^There is a registered propagator with username \"([^\"]*)\" and password \"([^\"]*)\" and email \"([^\"]*)\" with the following takes$")
     public void thereIsARegisteredPropagatorWithUsernameAndPasswordAndEmailAndListOfTakes(String username, String password, String email, List<Map<String, String>> table) {
-        Propagator propagator = PropagatorMother.getValidPropagatorWith(username, password, email);
+        var propagator = PropagatorMother.getValidPropagatorWith(username, password, email);
         registerPropagator(() -> propagator);
         table.forEach((take) -> {
             Take currentTake = new Take();
@@ -142,7 +142,7 @@ public class RegisterStepDefs {
 
     @When("^I register a new propagator with username \"([^\"]*)\", email \"([^\"]*)\" and password \"([^\"]*)\" with the following takes:$")
     public void iRegisterANewPropagatorWithUsernameEmailAndPasswordAndListOfTakes(String username, String email, String password, List<Map<String, String>> table) throws Throwable {
-        Propagator propagator = PropagatorMother.getValidPropagatorWith(username, password, email);
+        var propagator = PropagatorMother.getValidPropagatorWith(username, password, email);
         registerPropagator(() -> propagator);
         table.forEach((take) -> {
             Take currentTake = new Take();

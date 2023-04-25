@@ -113,9 +113,9 @@ public class DonationStepDefs {
 
     @And("The new donation is not updated")
     public void theNewDonationIsNotUpdated() {
-        Donation expectedDonation = donation;
+        var expectedDonation = donation;
         donation = donationRepository.findAll().iterator().next();
-        Donation actualDonation = donation;
+        var actualDonation = donation;
         assertEquals(expectedDonation, actualDonation);
     }
 

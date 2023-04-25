@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
@@ -27,9 +28,10 @@ public class GetSeedStepDefs {
 
     @When("I try to retrieve a seed with scientific name \"([^\"]*)\"$")
     public void iTryToRetrieveASeedWithId(String scientificName) throws Throwable {
-        Optional<Seed> optionalSeed = seedRepository.findByScientificName(scientificName);
+        var optionalSeed = seedRepository.findByScientificName(scientificName);
+        assertTrue(optionalSeed.isPresent());
         stepDefs.result = stepDefs.mockMvc.perform(
-            get("/seeds/{id}", optionalSeed.isPresent() ? optionalSeed.get().getId() : "999")
+            get("/seeds/{id}", optionalSeed.get().getId())
                 .with(AuthenticationStepDefs.authenticate())
                 .accept(MediaType.APPLICATION_JSON));
     }
