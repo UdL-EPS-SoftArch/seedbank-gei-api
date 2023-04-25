@@ -85,11 +85,11 @@ public class DonationStepDefs {
         previousLocation = donation.getLocation();
         var newLocation = DonationMother.getDifferentLocationFrom(donation);
         stepDefs.result = stepDefs.mockMvc.perform(patch("/donations/{id}", donation.getId())
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .characterEncoding("utf-8")
-                .content(new JSONObject().put("location", newLocation).toString())
-                .accept(MediaType.APPLICATION_JSON).with(AuthenticationStepDefs
-                        .authenticate()))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .characterEncoding("utf-8")
+                        .content(new JSONObject().put("location", newLocation).toString())
+                        .accept(MediaType.APPLICATION_JSON).with(AuthenticationStepDefs
+                                .authenticate()))
                 .andDo(print());
     }
 
@@ -104,10 +104,10 @@ public class DonationStepDefs {
         donation = donationRepository.findAll().iterator().next();
         previousLocation = donation.getLocation();
         stepDefs.result = stepDefs.mockMvc.perform(patch("/donations/{id}", donation.getId())
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .characterEncoding("utf-8")
-                .accept(MediaType.APPLICATION_JSON).with(AuthenticationStepDefs
-                        .authenticate()))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .characterEncoding("utf-8")
+                        .accept(MediaType.APPLICATION_JSON).with(AuthenticationStepDefs
+                                .authenticate()))
                 .andDo(print());
     }
 
@@ -122,11 +122,12 @@ public class DonationStepDefs {
     @When("I retrieve all donations")
     public void iRetrieveAllDonations() throws Exception {
         stepDefs.result = stepDefs.mockMvc.perform(
-                get("/donations")
-                        .accept(MediaType.APPLICATION_JSON)
-                        .with(AuthenticationStepDefs.authenticate()))
+                        get("/donations")
+                                .accept(MediaType.APPLICATION_JSON)
+                                .with(AuthenticationStepDefs.authenticate()))
                 .andDo(print());
     }
+
     @And("The response contains {int} donations")
     public void theResponseContainsDonations(int numDonations) throws Exception {
         stepDefs.result

@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.result.StatusResultMatchers;
+
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -43,7 +44,7 @@ public class RegisterStepDefs {
     private StepDefs stepDefs;
     @Autowired
     private TakeRepository takeRepository;
-    
+
     @Autowired
     private UserRepository userRepository;
 
@@ -119,6 +120,7 @@ public class RegisterStepDefs {
                         + user + "\"shouldn't exist",
                 propagatorRepository.existsById(user));
     }
+
     @Given("^There is a registered propagator with username \"([^\"]*)\" and password \"([^\"]*)\" and email \"([^\"]*)\" with the following takes$")
     public void thereIsARegisteredPropagatorWithUsernameAndPasswordAndEmailAndListOfTakes(String username, String password, String email, List<Map<String, String>> table) {
         var propagator = PropagatorMother.getValidPropagatorWith(username, password, email);

@@ -3,8 +3,8 @@ package cat.udl.eps.softarch.demo.steps;
 import cat.udl.eps.softarch.demo.domain.Propagator;
 import cat.udl.eps.softarch.demo.domain.Request;
 import cat.udl.eps.softarch.demo.domain.Take;
-import cat.udl.eps.softarch.demo.mothers.TakeMother;
 import cat.udl.eps.softarch.demo.mothers.RequestMother;
+import cat.udl.eps.softarch.demo.mothers.TakeMother;
 import cat.udl.eps.softarch.demo.repository.PropagatorRepository;
 import cat.udl.eps.softarch.demo.repository.RequestRepository;
 import cat.udl.eps.softarch.demo.repository.TakeRepository;
@@ -16,13 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -87,10 +82,10 @@ public class RequestStepDefs {
     public void thePropagatorRemovesTheRequest() throws Exception {
         var request = requestRepository.findAll().iterator().next();
         stepDefs.result = stepDefs.mockMvc.perform(
-                delete("/requests/{id}", request.getId())
-                        .characterEncoding("utf-8")
-                        .accept(MediaType.APPLICATION_JSON)
-                        .with(AuthenticationStepDefs.authenticate()))
+                        delete("/requests/{id}", request.getId())
+                                .characterEncoding("utf-8")
+                                .accept(MediaType.APPLICATION_JSON)
+                                .with(AuthenticationStepDefs.authenticate()))
                 .andDo(print());
     }
 
@@ -136,9 +131,9 @@ public class RequestStepDefs {
     @When("I retrieve all requests")
     public void iRetrieveAllRequests() throws Exception {
         stepDefs.result = stepDefs.mockMvc.perform(
-                get("/requests")
-                        .accept(MediaType.APPLICATION_JSON)
-                        .with(AuthenticationStepDefs.authenticate()))
+                        get("/requests")
+                                .accept(MediaType.APPLICATION_JSON)
+                                .with(AuthenticationStepDefs.authenticate()))
                 .andDo(print());
     }
 

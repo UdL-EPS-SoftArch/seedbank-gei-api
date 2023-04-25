@@ -1,6 +1,5 @@
 package cat.udl.eps.softarch.demo.steps;
 
-import cat.udl.eps.softarch.demo.domain.Seed;
 import cat.udl.eps.softarch.demo.repository.SeedRepository;
 import io.cucumber.java.en.When;
 import org.json.JSONArray;
@@ -8,16 +7,12 @@ import org.json.JSONObject;
 import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import javax.transaction.Transactional;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 public class UpdateSeedStepDefs {
     @Autowired
@@ -39,11 +34,11 @@ public class UpdateSeedStepDefs {
 
         stepDefs.result = stepDefs.mockMvc.perform(
                 patch("/seeds/{id}", optionalSeed.isPresent() ? optionalSeed.get().getId() : "999")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(modifySeed.toString())
-                    .accept(MediaType.APPLICATION_JSON)
-                    .characterEncoding(StandardCharsets.UTF_8)
-                    .with(AuthenticationStepDefs.authenticate())).andDo(print());
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(modifySeed.toString())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .with(AuthenticationStepDefs.authenticate())).andDo(print());
 
         if (stepDefs.result.andReturn().getResponse().getStatus() == 200) {
             JSONObject updateSeedJSON = new JSONObject(stepDefs.result.andReturn().getResponse().getContentAsString());
@@ -55,7 +50,7 @@ public class UpdateSeedStepDefs {
 
     @When("I update seed with scientific name \"([^\"]*)\" by changing it to \"([^\"]*)\"$")
     public void iUpdateSeedWithIdByChangingScientificNameTo(
-            String scientificName, String newScientificName) throws Throwable{
+            String scientificName, String newScientificName) throws Throwable {
         iUpdateSeedWithIdByChangingScientificNameToAndCommonNameTo(scientificName, newScientificName, null);
     }
 }
