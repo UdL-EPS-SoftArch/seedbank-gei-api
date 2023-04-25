@@ -1,6 +1,7 @@
 package cat.udl.eps.softarch.demo.steps;
 
 import cat.udl.eps.softarch.demo.domain.Seed;
+import cat.udl.eps.softarch.demo.mothers.SeedMother;
 import cat.udl.eps.softarch.demo.repository.SeedRepository;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.When;
@@ -25,11 +26,7 @@ public class CreateSeedStepDefs {
 
     @When("I create a new Seed with scientificName \"([^\"]*)\" and commonName \"([^\"]*)\"$")
     public void iCreateANewSeedWithScientificNameAndCommonName(String scientificName, String commonName) throws Throwable {
-        Seed seed = new Seed();
-        seed.setScientificName(scientificName);
-        List<String> commonNames = Arrays.asList(commonName.split(", ", -1));
-        seed.setCommonName(commonNames);
-
+        var seed = SeedMother.getSeed(scientificName, commonName);
         stepDefs.result = stepDefs.mockMvc.perform(
                 post("/seeds")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -43,10 +40,7 @@ public class CreateSeedStepDefs {
 
     @And("There is already a seed with scientificName \"([^\"]*)\" and commonName \"([^\"]*)\"$")
     public void thereIsAlreadyASeedWithIdScientificNameAndCommonName(String scientificName, String commonName) throws Throwable {
-        Seed seed = new Seed();
-        seed.setScientificName(scientificName);
-        List<String> commonNames = Arrays.asList(commonName.split(", ", -1));
-        seed.setCommonName(commonNames);
+        var seed = SeedMother.getSeed(scientificName, commonName);
         seedRepository.save(seed);
     }
 
