@@ -132,18 +132,6 @@ public class DonationStepDefs {
         stepDefs.result
                 .andExpect(jsonPath("$._embedded.donations", hasSize(numDonations)));
     }
-    // FIXME: Test this when controller is implemented
-//
-//    @When("I retrieve all donations from user {string}")
-//    public void iRetrieveAllDonationsFromUser(String donor) throws Exception {
-//        stepDefs.result = stepDefs.mockMvc.perform(
-//                get("/donations", donor)
-//                        .accept(MediaType.APPLICATION_JSON)
-//                        .with(AuthenticationStepDefs.authenticate())
-//                        .queryParam("donor", donor))
-//        .andDo(print());
-
-//    }
 
     @When("The donor removes the donation")
     public void theDonorRemovesTheDonation() throws Exception {
