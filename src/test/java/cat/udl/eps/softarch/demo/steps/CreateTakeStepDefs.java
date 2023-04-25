@@ -26,12 +26,9 @@ public class CreateTakeStepDefs {
 
     @Autowired
     private StepDefs stepDefs;
-    @When("^I create a new Take with amount (\\d+), weight (\\d+) and location \"([^\"]*\")$")
-    public void iCreateANewTake(Integer amount, Integer weight, String location) throws Throwable {
-        Take take = new Take();
-        take.setAmount(amount);
-        take.setWeight(new BigDecimal(weight));
-        take.setLocation(location);
+    @When("^I create a valid take")
+    public void iCreateANewTake() throws Throwable {
+        var take = TakeMother.getValidTake();
         stepDefs.result = stepDefs.mockMvc.perform(
                 post("/takes")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -61,16 +58,10 @@ public class CreateTakeStepDefs {
                         .accept(MediaType.APPLICATION_JSON));
     }
 
-    @And("There is a Take created with amount {int}, weight {int} and location {string}")
-    public void thereIsATakeCreatedWithAmountWeightAndLocation(int amount, int weight, String location) {
-        Take take = new Take();
-        take.setAmount(amount);
-        take.setWeight(new BigDecimal(weight));
-        take.setLocation(location);
+    @And("There is a valid take saved on the database")
+    public void thereIsATakeCreatedWithAmountWeightAndLocation() {
+        var take = TakeMother.getValidTake();
         takeRepository.save(take);
-        Iterator it = takeRepository.findAll().iterator();
-        take = (Take) it.next();
-        take = (Take) it.next();
         CreateTakeStepDefs.newResourceUri = "/takes/" + take.getId();
     }
     

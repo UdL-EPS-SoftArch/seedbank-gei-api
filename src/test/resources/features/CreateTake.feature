@@ -12,24 +12,24 @@ I want to create a new Take
 
   Scenario: Create a new Take as user
     Given I login as "user" with password "password"
-    When I create a new Take with amount 5, weight 5 and location "Lleida"
+    When I create a valid take
     Then The response code is 403
 
   Scenario: Create a new Take as admin
     Given I login as "admin" with password "password"
-    When I create a new Take with amount 5, weight 5 and location "Lleida"
+    When I create a valid take
     Then The response code is 201
     And I try to retrieve that Take
     And The response code is 200
 
   Scenario: Create a new Take as donor
     Given I login as "donor" with password "password"
-    When I create a new Take with amount 5, weight 5 and location "Lleida"
+    When I create a valid take
     Then The response code is 403
 
   Scenario: Create a new Take as propagator
     Given I login as "propagator" with password "password"
-    When I create a new Take with amount 5, weight 5 and location "Lleida"
+    When I create a valid take
     Then The response code is 201
     And I try to retrieve that Take
     And The response code is 200
@@ -56,5 +56,5 @@ I want to create a new Take
 
   Scenario: Create a new Take When Im not authenticated
     Given I'm not logged in
-    When I create a new Take with amount 5, weight 5 and location "Lleida"
+    When I create a valid take
     Then The response code is 401
