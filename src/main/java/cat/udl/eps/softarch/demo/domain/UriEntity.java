@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.io.Serializable;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
+import lombok.EqualsAndHashCode;
 import org.atteo.evo.inflector.English;
 import org.springframework.data.domain.Persistable;
 import org.springframework.util.StringUtils;
@@ -15,6 +16,7 @@ import org.springframework.util.StringUtils;
  */
 @MappedSuperclass
 @JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="uri")
+@EqualsAndHashCode()
 public abstract class UriEntity<ID extends Serializable> implements Persistable<ID> {
 
     /**

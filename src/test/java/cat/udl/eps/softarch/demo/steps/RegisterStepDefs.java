@@ -1,11 +1,11 @@
 package cat.udl.eps.softarch.demo.steps;
 
-import cat.udl.eps.softarch.demo.domain.Donor;
-import cat.udl.eps.softarch.demo.domain.User;
+import cat.udl.eps.softarch.demo.domain.*;
+import cat.udl.eps.softarch.demo.mothers.AdminMother;
 import cat.udl.eps.softarch.demo.mothers.DonorMother;
+import cat.udl.eps.softarch.demo.mothers.PropagatorMother;
 import cat.udl.eps.softarch.demo.mothers.UserMother;
-import cat.udl.eps.softarch.demo.repository.DonorRepository;
-import cat.udl.eps.softarch.demo.repository.UserRepository;
+import cat.udl.eps.softarch.demo.repository.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -21,7 +21,10 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.result.StatusResultMatchers;
-
+import java.math.BigDecimal;
+import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -33,13 +36,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 public class RegisterStepDefs {
 
     @Autowired
     private StepDefs stepDefs;
-
+    @Autowired
+    private TakeRepository takeRepository;
+    
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private AdminRepository adminRepository;
+
+    @Autowired
+    private PropagatorRepository propagatorRepository;
 
     @Autowired
     private DonorRepository donorRepository;
@@ -54,6 +66,11 @@ public class RegisterStepDefs {
     @Given("^There is a registered user with username \"([^\"]*)\" and password \"([^\"]*)\" and email \"([^\"]*)\"$")
     public void thereIsARegisteredUserWithUsernameAndPasswordAndEmail(String username, String password, String email) {
         registerUser(() -> UserMother.getUserWithEncodingPassword(username, password, email));
+    }
+
+    @Given("^There is a registered admin with username \"([^\"]*)\" and password \"([^\"]*)\" and email \"([^\"]*)\"$")
+    public void thereIsARegisteredAdminWithUsernameAndPasswordAndEmail(String username, String password, String email) {
+        registerAdmin(() -> AdminMother.getAdminWithEncodingPassword(username, password, email));
     }
 
     @Given("^There is a valid registered user with username \"([^\"]*)\"")
@@ -96,6 +113,48 @@ public class RegisterStepDefs {
                 .andExpect(status().isNotFound());
     }
 
+    @Given("^There is no registered propagator with username \"([^\"]*)\"$")
+    public void thereIsNoRegisteredPropagatorWithUsername(String user) {
+        Assert.assertFalse("Propagator \""
+                        + user + "\"shouldn't exist",
+                propagatorRepository.existsById(user));
+    }
+    @Given("^There is a registered propagator with username \"([^\"]*)\" and password \"([^\"]*)\" and email \"([^\"]*)\" with the following takes$")
+    public void thereIsARegisteredPropagatorWithUsernameAndPasswordAndEmailAndListOfTakes(String username, String password, String email, List<Map<String, String>> table) {
+        Propagator propagator = PropagatorMother.getValidPropagatorWith(username, password, email);
+        registerPropagator(() -> propagator);
+        table.forEach((take) -> {
+            Take currentTake = new Take();
+            currentTake.setAmount(Integer.parseInt(take.get("amount")));
+            currentTake.setWeight(new BigDecimal(Integer.parseInt(take.get("weight"))));
+            currentTake.setLocation(take.get("location"));
+            currentTake.setDate((ZonedDateTime.parse(take.get("date"))));
+            currentTake.setTakePropagator(propagator);
+            takeRepository.save(currentTake);
+            CreateTakeStepDefs.newResourceUri = "/takes/" + currentTake.getId();
+        });
+    }
+
+    @Given("^There is a valid registered propagator with username \"([^\"]*)\"")
+    public void registerValidPropagatorWithUserName(String username) {
+        registerPropagator(() -> PropagatorMother.getValidPropagatorWith(username));
+    }
+
+    @When("^I register a new propagator with username \"([^\"]*)\", email \"([^\"]*)\" and password \"([^\"]*)\" with the following takes:$")
+    public void iRegisterANewPropagatorWithUsernameEmailAndPasswordAndListOfTakes(String username, String email, String password, List<Map<String, String>> table) throws Throwable {
+        Propagator propagator = PropagatorMother.getValidPropagatorWith(username, password, email);
+        registerPropagator(() -> propagator);
+        table.forEach((take) -> {
+            Take currentTake = new Take();
+            currentTake.setAmount(Integer.parseInt(take.get("amount")));
+            currentTake.setWeight(new BigDecimal(Integer.parseInt(take.get("weight"))));
+            currentTake.setLocation(take.get("location"));
+            currentTake.setDate((ZonedDateTime.parse(take.get("date"))));
+            currentTake.setTakePropagator(propagator);
+            takeRepository.save(currentTake);
+            CreateTakeStepDefs.newResourceUri = "/takes/" + currentTake.getId();
+        });
+    }
 
     @Given("^There is no registered donor with username \"([^\"]*)\"$")
     public void thereIsNoRegisteredDonorWithUsername(String user) {
@@ -115,6 +174,16 @@ public class RegisterStepDefs {
         registerDonor(() -> DonorMother.getValidDonorWith(username));
     }
 
+    @Given("There is a registered propagator with username {string} and password {string} and email {string}")
+    public void thereIsARegisteredPropagatorWithUsernameAndPasswordAndEmail(String username, String password, String email) {
+        registerPropagator(() -> PropagatorMother.getValidPropagatorWith(username, password, email));
+    }
+
+    @Given("There is a valid registered propagator with username {string}")
+    public void thereIsAValidRegisteredPropagatorWithUsername(String username) {
+        registerPropagator(() -> PropagatorMother.getValidPropagatorWith(username));
+    }
+
     @When("^I register a new donor with username \"([^\"]*)\", email \"([^\"]*)\" and password \"([^\"]*)\"$")
     public void iRegisterANewDonorWithUsernameEmailAndPassword(String username, String email, String password) throws Throwable {
         registerUserViaApi(() -> DonorMother.getValidDonorWith(username, password, email));
@@ -125,8 +194,16 @@ public class RegisterStepDefs {
         register(userGenerator.get(), userRepository);
     }
 
+    private void registerAdmin(Supplier<Admin> adminGenerator) {
+        register(adminGenerator.get(), adminRepository);
+    }
+
     private void registerDonor(Supplier<Donor> donorGenerator) {
         register(donorGenerator.get(), donorRepository);
+    }
+
+    private void registerPropagator(Supplier<Propagator> propagatorGenerator) {
+        register(propagatorGenerator.get(), propagatorRepository);
     }
 
     private <T extends Persistable<ID>, ID> void register(T value, CrudRepository<T, ID> repo) {
@@ -168,6 +245,4 @@ public class RegisterStepDefs {
                 .andDo(print())
                 .andExpect(validator.apply(status()));
     }
-
-
 }
