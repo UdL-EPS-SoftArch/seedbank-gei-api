@@ -9,6 +9,5 @@ import java.util.List;
 
 @RepositoryRestResource
 public interface PropagatorRepository extends PagingAndSortingRepository<Propagator, String> {
-    Propagator findById(@Param("id") Integer id);
     List<Propagator> findByUsernameContaining(@Param("text") String text);
 }
