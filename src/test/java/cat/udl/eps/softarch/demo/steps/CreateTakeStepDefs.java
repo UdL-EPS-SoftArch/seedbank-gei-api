@@ -13,6 +13,7 @@ import java.util.Iterator;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 
 public class CreateTakeStepDefs {
@@ -35,9 +36,10 @@ public class CreateTakeStepDefs {
         stepDefs.result = stepDefs.mockMvc.perform(
                 post("/takes")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
                         .content(stepDefs.mapper.writeValueAsString(take))
                         .with(AuthenticationStepDefs.authenticate())
-        );
+        ).andDo(print());
         newResourceUri = stepDefs.result.andReturn().getResponse().getHeader("Location");
     }
 
@@ -46,6 +48,7 @@ public class CreateTakeStepDefs {
         stepDefs.result = stepDefs.mockMvc.perform(
                         get(newResourceUri)
                                 .with(AuthenticationStepDefs.authenticate())
+                                .characterEncoding("utf-8")
                                 .accept(MediaType.APPLICATION_JSON));
     }
 
@@ -55,6 +58,7 @@ public class CreateTakeStepDefs {
         stepDefs.result = stepDefs.mockMvc.perform(
                 get(newResourceUri)
                         .with(AuthenticationStepDefs.authenticate())
+                        .characterEncoding("utf-8")
                         .accept(MediaType.APPLICATION_JSON));
     }
 
@@ -77,6 +81,7 @@ public class CreateTakeStepDefs {
         stepDefs.result = stepDefs.mockMvc.perform(
                 post("/takes")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
                         .content(stepDefs.mapper.writeValueAsString(null))
                         .with(AuthenticationStepDefs.authenticate())
         );

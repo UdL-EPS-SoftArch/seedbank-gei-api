@@ -19,6 +19,7 @@ public class Seed {
 
     @NotNull
     @NotBlank
+    @Column(unique = true)
     private String scientificName;
 
     @NotNull
@@ -28,4 +29,8 @@ public class Seed {
     @ManyToOne
     @JsonIdentityReference(alwaysAsId = true)
     private Batch of;
+
+    @ManyToMany
+    @JsonIdentityReference(alwaysAsId = true)
+    private List<Seed> beneficialFor;
 }

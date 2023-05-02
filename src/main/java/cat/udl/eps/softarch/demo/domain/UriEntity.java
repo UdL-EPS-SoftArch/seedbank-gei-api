@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.io.Serializable;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
-
 import lombok.EqualsAndHashCode;
 import org.atteo.evo.inflector.English;
 import org.springframework.data.domain.Persistable;
