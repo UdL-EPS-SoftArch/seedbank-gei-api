@@ -1,12 +1,14 @@
 package cat.udl.eps.softarch.demo.config;
 
-import cat.udl.eps.softarch.demo.domain.User;
+import cat.udl.eps.softarch.demo.domain.*;
 import cat.udl.eps.softarch.demo.mothers.*;
 import cat.udl.eps.softarch.demo.repository.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
+import java.math.BigDecimal;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 
 @Configuration
@@ -21,8 +23,6 @@ public class DBInitialization {
     String defaultPassword;
     @Value("${spring.profiles.active:test}") // if profile is not set, use test
     private String activeProfiles;
-    private final UserRepository userRepository;
-    private final TakeRepository takeRepository;
 
     public DBInitialization(UserRepository userRepository, DonorRepository donorRepository, TakeRepository takeRepository, PropagatorRepository propagatorRepository, DonationRepository donationRepository, RequestRepository requestRepository) {
         this.userRepository = userRepository;
@@ -35,16 +35,17 @@ public class DBInitialization {
 
     @PostConstruct
     public void initializeDatabase() {
-        // Default user
-        if (!userRepository.existsById("demo")) {
-            User user = new User();
-            user.setEmail("demo@sample.app");
-            user.setUsername("demo");
-            user.setPassword(defaultPassword);
-            user.encodePassword();
-            userRepository.save(user);
-        }
-        if (isProfileActive("test")) {
+        if (Arrays.asList(activeProfiles.split(",")).contains("test")) {
+            // Testing instances
+            Propagator propagator = new Propagator();
+            if (!userRepository.existsById("propagator")) {
+                propagator.setEmail("propagator@sample.app");
+                propagator.setUsername("propagator");
+                propagator.setPassword(defaultPassword);
+                propagator.encodePassword();
+                propagatorRepository.save(propagator);
+            }
+
             if (!userRepository.existsById("test")) {
                 User user = new User();
                 user.setEmail("test@sample.app");
@@ -53,6 +54,29 @@ public class DBInitialization {
                 user.encodePassword();
                 userRepository.save(user);
             }
+
+            if (!userRepository.existsById("donor")) {
+                Donor donor = new Donor();
+                donor.setEmail("donor@sample.app");
+                donor.setUsername("donor");
+                donor.setPassword(defaultPassword);
+                donor.encodePassword();
+                userRepository.save(donor);
+            }
+
+            // Testing instances
+            if (!userRepository.existsById("admintest")) {
+                User user = new Admin();
+                user.setEmail("admintest@sample.app");
+                user.setUsername("admintest");
+                user.setPassword(defaultPassword);
+                user.encodePassword();
+                userRepository.save(user);
+            }
+
+            createSampleTakes(propagator);
+
+
         }
         if (isProfileActive("prod") && !isProfileActive("test")) {
             // Default donor
