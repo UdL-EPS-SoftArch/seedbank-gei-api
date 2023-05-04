@@ -28,4 +28,14 @@ public class Propagator extends User {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_PROPAGATOR");
     }
+
+    @Override
+    public String getUsername() {
+        return super.getUsername();
+    }
+
+    @Override
+    public void setUsername(String username) {
+        super.setUsername(username);
+    }
 }
