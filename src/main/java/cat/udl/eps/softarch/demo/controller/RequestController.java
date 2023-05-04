@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.BasePathAwareController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -20,16 +21,25 @@ import java.util.stream.Collectors;
 @BasePathAwareController
 public class RequestController {
 
-    @Autowired
     private RequestRepository requestRepository;
 
+    public RequestCOntroller(
+        this.requestRepository = requestRepository;
+    )
+
+//    @PostMapping("/requests")
+//    public @ResponseBody ResponseEntity<Request> createRequest(HttpServletRequest rawRequest) throws IOException {
+//        String requestBody = rawRequest.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+//        ObjectMapper mapper = new ObjectMapper();
+//        JsonNode rootNode = mapper.readTree(requestBody);
+//        JsonNode propagatorNode = rootNode.get("propagator");
+//        Request request = mapper.readValue(requestBody, Request.class);
+//        Request savedRequest = requestRepository.save(request);
+//        return ResponseEntity.ok(savedRequest);
+//    }
+
     @PostMapping("/requests")
-    public @ResponseBody ResponseEntity<Request> createRequest(HttpServletRequest rawRequest) throws IOException {
-        String requestBody = rawRequest.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode rootNode = mapper.readTree(requestBody);
-        JsonNode propagatorNode = rootNode.get("propagator");
-        Request request = mapper.readValue(requestBody, Request.class);
+    public @ResponseBody ResponseEntity<Request> createRequest(@RequestBody Request request) {
         Request savedRequest = requestRepository.save(request);
         return ResponseEntity.ok(savedRequest);
     }
