@@ -7,7 +7,13 @@ import cat.udl.eps.softarch.demo.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.rest.core.annotation.*;
+import org.springframework.security.access.AuthorizationServiceException;
+import org.springframework.security.web.server.authorization.AuthorizationContext;
 import org.springframework.stereotype.Component;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @Component
 @RepositoryEventHandler
@@ -25,7 +31,13 @@ public class RequestEventHandler {
     }
 
     @HandleBeforeCreate
-    public void handleRequestPreCreate(Request request) {
+    public boolean handleRequestPreCreate(HttpServletRequest httpRequest, HttpServletResponse httpResponse, Request request) throws IOException {
         logger.info("Before creating: {}", request.toString());
+        if (request.getPropagator() == null) {
+            httpResponse.getWriter().write("El usuario debe ser de tipo propagator");
+            httpResponse.setStatus(514);
+            return false;
+        }
+        return true;
     }
 }
