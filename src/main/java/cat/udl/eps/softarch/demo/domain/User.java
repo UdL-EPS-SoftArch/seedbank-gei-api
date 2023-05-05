@@ -26,12 +26,6 @@ import java.util.Collection;
 @Table(name = "DemoUser") //Avoid collision with system table User in Postgres
 @Data
 @EqualsAndHashCode(callSuper = true)
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "username",
-        resolver = EntityIdResolver.class,
-        scope = User.class
-)
 public class User extends UriEntity<String> implements UserDetails {
 
     public static PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -59,10 +53,6 @@ public class User extends UriEntity<String> implements UserDetails {
     @Override
     public String getId() {
         return username;
-    }
-
-    public void setId(String id) {
-        this.username = id;
     }
 
     @Override
