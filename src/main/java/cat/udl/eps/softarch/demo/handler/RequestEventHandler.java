@@ -33,11 +33,10 @@ public class RequestEventHandler {
     }
 
     @HandleBeforeCreate
-    public boolean handleRequestPreCreate(Request request) {
+    public void handleRequestPreCreate(Request request) {
         logger.info("Before creating: {}", request.toString());
         if (request.getPropagator() == null) {
             throw new WrongUserRoleException("El usuario debe ser de tipo propagator");
         }
-        return true;
     }
 }
