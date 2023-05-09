@@ -15,7 +15,7 @@ import java.time.ZonedDateTime;
 public class Batch extends UriEntity<Long> {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
-    private Long id;
+    private Long identifier;
 
     @NotNull
     @Min(value = 1, message = "The minimal amount of a batch should be one")
@@ -30,5 +30,11 @@ public class Batch extends UriEntity<Long> {
     private String location;
 
     private ZonedDateTime date = ZonedDateTime.now();
+
+    @Override
+    public Long getId() {
+        return identifier;
+    }
+
 
 }

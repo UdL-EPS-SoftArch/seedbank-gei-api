@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
 import java.util.Collection;
 
 @Entity

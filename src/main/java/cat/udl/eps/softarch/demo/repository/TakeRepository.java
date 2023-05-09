@@ -8,8 +8,8 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 @RepositoryRestResource
 public interface TakeRepository extends PagingAndSortingRepository<Take, Long> {
 
-    //This is not void, when merge uncomment Batch
-    Take findTakeFulfilledById(@Param("id") Integer batchId);
-    Take findTakeTakenById(@Param("id") Integer batchId);
+//    This is not void, when merge uncomment Batch
+    Take findTakeFulfilledByIdentifier(@Param("id") Integer batchId);
+    Take findTakeTakenByIdentifier(@Param("id") Integer batchId);
 
 }
