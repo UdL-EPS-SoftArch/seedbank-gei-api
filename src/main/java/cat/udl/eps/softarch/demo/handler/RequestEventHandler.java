@@ -2,7 +2,7 @@ package cat.udl.eps.softarch.demo.handler;
 
 import cat.udl.eps.softarch.demo.domain.Request;
 import cat.udl.eps.softarch.demo.domain.User;
-import cat.udl.eps.softarch.demo.exceptions.WrongUserRoleException;
+import cat.udl.eps.softarch.demo.exceptions.UserNotPropagator;
 import cat.udl.eps.softarch.demo.repository.RequestRepository;
 import cat.udl.eps.softarch.demo.repository.UserRepository;
 import org.slf4j.Logger;
@@ -29,6 +29,6 @@ public class RequestEventHandler {
     @HandleBeforeCreate
     public void handleRequestPreCreate(Request request) {
         logger.info("Before creating: {}", request.toString());
-        if (request.getPropagator() == null) throw new WrongUserRoleException();
+        if (request.getPropagator() == null) throw new UserNotPropagator();
     }
 }
