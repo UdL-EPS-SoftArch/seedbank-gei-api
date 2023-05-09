@@ -7,15 +7,9 @@ import cat.udl.eps.softarch.demo.repository.RequestRepository;
 import cat.udl.eps.softarch.demo.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.rest.core.annotation.*;
-import org.springframework.security.access.AuthorizationServiceException;
-import org.springframework.security.web.server.authorization.AuthorizationContext;
+import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
+import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.stereotype.Component;
-
-import javax.persistence.EntityNotFoundException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 @Component
 @RepositoryEventHandler
@@ -35,8 +29,6 @@ public class RequestEventHandler {
     @HandleBeforeCreate
     public void handleRequestPreCreate(Request request) {
         logger.info("Before creating: {}", request.toString());
-        if (request.getPropagator() == null) {
-            throw new WrongUserRoleException("El usuario debe ser de tipo propagator");
-        }
+        if (request.getPropagator() == null) throw new WrongUserRoleException();
     }
 }
