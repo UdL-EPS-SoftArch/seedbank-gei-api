@@ -29,7 +29,7 @@ Feature: Create a Request
     And A valid take action exists for the propagator
     But There is no Propagator
     When The propagator creates a request from the take action
-    Then The response code is 401
+    Then The response code is 412
     And There is 0 request created
 
 Scenario: Create a new Request without a take
