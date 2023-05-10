@@ -29,7 +29,7 @@ Feature: Create a Donation
     And A valid take action exists
     But There is no Donor
     When The donor creates a donation from the take action
-    Then The response code is 400
+    Then The response code is 412
     And There is 0 donation created
 
   Scenario: Create a new Donation without a take
