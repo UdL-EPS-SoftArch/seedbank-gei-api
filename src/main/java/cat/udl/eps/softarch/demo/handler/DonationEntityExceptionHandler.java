@@ -12,14 +12,14 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import javax.persistence.EntityNotFoundException;
 
 @ControllerAdvice
-public class RequestEntityExceptionHandler extends ResponseEntityExceptionHandler {
+public class DonationEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = {EntityNotFoundException.class})
     protected ResponseEntity<Object> handleNotFound(RuntimeException ex, WebRequest request) {
-        String bodyOfResponse = "El usuario debe ser de tipo propagator";
+        String bodyOfResponse = "El usuario debe ser de tipo donor";
         JSONObject error = new JSONObject();
-        error.put("entity", "Request");
-        error.put("property", "propagator");
+        error.put("entity", "Donation");
+        error.put("property", "donor");
         error.put("invalidValue", "null");
         error.put("message", bodyOfResponse);
 
