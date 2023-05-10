@@ -1,11 +1,6 @@
 package cat.udl.eps.softarch.demo.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -16,6 +11,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import java.util.Collection;
 
 @Entity
@@ -24,55 +25,57 @@ import java.util.Collection;
 @EqualsAndHashCode(callSuper = true)
 public class User extends UriEntity<String> implements UserDetails {
 
-	public static PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    public static PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-	@Id
-	private String username;
+    @Id
+    private String username;
 
-	@NotBlank
-	@Email
-	@Column(unique = true)
-	private String email;
+    @NotBlank
+    @Email
+    @Column(unique = true)
+    private String email;
 
-	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-	@NotBlank
-	@Length(min = 8, max = 256)
-	private String password;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @NotBlank
+    @Length(min = 8, max = 256)
+    private String password;
 
-	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-	private boolean passwordReset;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private boolean passwordReset;
 
-	public void encodePassword() {
-		this.password = passwordEncoder.encode(this.password);
-	}
+    public void encodePassword() {
+        this.password = passwordEncoder.encode(this.password);
+    }
 
-	@Override
-	public String getId() { return username; }
+    @Override
+    public String getId() {
+        return username;
+    }
 
-	@Override
-	@JsonValue(value = false)
-	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER");
-	}
+    @Override
+    @JsonValue(value = false)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER");
+    }
 
-	@Override
-	public boolean isAccountNonExpired() {
-		return true;
-	}
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
 
-	@Override
-	public boolean isAccountNonLocked() {
-		return true;
-	}
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
 
-	@Override
-	public boolean isCredentialsNonExpired() {
-		return true;
-	}
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
 
-	@Override
-	public boolean isEnabled() {
-		return true;
-	}
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

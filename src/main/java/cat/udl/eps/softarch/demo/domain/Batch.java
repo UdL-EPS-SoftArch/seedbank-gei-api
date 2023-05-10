@@ -3,8 +3,15 @@ package cat.udl.eps.softarch.demo.domain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.Length;
-import javax.persistence.*;
-import javax.validation.constraints.*;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
@@ -30,5 +37,6 @@ public class Batch extends UriEntity<Long> {
     private String location;
 
     private ZonedDateTime date = ZonedDateTime.now();
+
 
 }

@@ -84,7 +84,7 @@ public class DBInitialization {
             if (!donorRepository.existsById("donor1")) donorRepository.save(donor);
             // Default propagator
             var propagator = PropagatorMother.getValidPropagatorWith("propagator1");
-            propagatorRepository.save(propagator);
+            if (!propagatorRepository.existsById("propagator1")) propagatorRepository.save(propagator);
             // Default take
             var take = TakeMother.getValidTake();
             take.setTakePropagator(propagator);
