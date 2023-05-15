@@ -11,7 +11,7 @@ import java.util.List;
 
 @Data
 @Entity
-public class Seed {
+public class Seed extends UriEntity<Long> {
 
     @Id
     @GeneratedValue()
