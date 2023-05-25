@@ -79,6 +79,24 @@ public class DBInitialization {
 
         }
         if (isProfileActive("prod") && !isProfileActive("test")) {
+
+            if (!userRepository.existsById("admin1")) {
+                User user = new Admin();
+                user.setEmail("admin1@sample.app");
+                user.setUsername("admin1");
+                user.setPassword(defaultPassword);
+                user.encodePassword();
+                userRepository.save(user);
+            }
+            if (!userRepository.existsById("test")) {
+                User user = new User();
+                user.setEmail("test@sample.app");
+                user.setUsername("test");
+                user.setPassword(defaultPassword);
+                user.encodePassword();
+                userRepository.save(user);
+            }
+
             // Default donor
             var donor = DonorMother.getValidDonorWith("donor1");
             if (!donorRepository.existsById("donor1")) donorRepository.save(donor);
