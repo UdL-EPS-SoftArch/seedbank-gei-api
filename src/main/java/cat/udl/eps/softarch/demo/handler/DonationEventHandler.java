@@ -22,14 +22,14 @@ public class DonationEventHandler {
     final Logger logger = LoggerFactory.getLogger(User.class);
     final UserRepository userRepository;
     final DonationRepository donationRepository;
-    @Autowired
     final RequestRepository requestRepository;
-    @Autowired
     final TakeRepository takeRepository;
 
-    public DonationEventHandler(UserRepository userRepository, DonationRepository donationRepository) {
+    public DonationEventHandler(UserRepository userRepository, DonationRepository donationRepository, RequestRepository requestRepository, TakeRepository takeRepository) {
         this.userRepository = userRepository;
         this.donationRepository = donationRepository;
+        this.takeRepository = takeRepository;
+        this.requestRepository = requestRepository;
     }
 
     @HandleBeforeCreate
