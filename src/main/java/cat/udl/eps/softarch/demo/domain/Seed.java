@@ -26,10 +26,6 @@ public class Seed extends UriEntity<Long> {
     @ElementCollection
     private List<String> commonName;
 
-    @ManyToOne
-    @JsonIdentityReference(alwaysAsId = true)
-    private Batch of;
-
     @ManyToMany
     @JsonIdentityReference(alwaysAsId = true)
     private List<Seed> beneficialFor;
