@@ -36,7 +36,7 @@ public class DonationEventHandler {
     public void handleDonationPreCreate(Donation donation) {
         logger.info("Before creating: {}", donation.toString());
         Request request = requestRepository.findRequestByAmountAndWeight(donation.getAmount(), donation.getWeight());
-        if (request != null){
+        if (donation.getTarget() != null){
             Take take = new Take();
             take.setAmount(request.getAmount());
             take.setWeight(request.getWeight());
