@@ -43,9 +43,9 @@ public class DonationEventHandler {
             take.setLocation(request.getLocation());
             take.setTakePropagator(request.getPropagator());
             donation.setTakenBy(take);
+            takeRepository.save(take);
             request.setFulfilledBy(take);
             requestRepository.save(request);
-            takeRepository.save(take);
         }
         if (donation.getDonor() == null) throw new UserNotDonor();
     }
