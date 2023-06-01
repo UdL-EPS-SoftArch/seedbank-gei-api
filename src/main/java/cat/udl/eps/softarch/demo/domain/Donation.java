@@ -20,4 +20,8 @@ public class Donation extends Batch {
     @OneToOne
     @JsonIdentityReference(alwaysAsId = true)
     private Take takenBy;
+
+    @OneToOne
+    @JsonIdentityReference(alwaysAsId = true)
+    private Request target;
 }
