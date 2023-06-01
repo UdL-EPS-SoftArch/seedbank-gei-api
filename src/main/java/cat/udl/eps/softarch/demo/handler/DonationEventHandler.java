@@ -35,15 +35,8 @@ public class DonationEventHandler {
     @HandleBeforeCreate
     public void handleDonationPreCreate(Donation donation) {
         logger.info("Before creating: {}", donation.toString());
-        Request request = requestRepository.findRequestByAmountAndWeight(donation.getAmount(), donation.getWeight());
         if (donation.getTarget() != null){
-            Take take = new Take();
-            take.setAmount(request.getAmount());
-            take.setWeight(request.getWeight());
-            take.setLocation(request.getLocation());
-            take.setTakePropagator(request.getPropagator());
-            donation.setTakenBy(take);
-            takeRepository.save(take);
+
         }
         if (donation.getDonor() == null) throw new UserNotDonor();
     }
