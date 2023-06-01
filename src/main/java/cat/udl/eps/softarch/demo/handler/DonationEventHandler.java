@@ -36,7 +36,13 @@ public class DonationEventHandler {
     public void handleDonationPreCreate(Donation donation) {
         logger.info("Before creating: {}", donation.toString());
         if (donation.getTarget() != null){
-
+            Take take = new Take();
+            take.setAmount(donation.getTarget().getAmount());
+            take.setWeight(donation.getTarget().getWeight());
+            take.setLocation(donation.getTarget().getLocation());
+            take.setTakePropagator(donation.getTarget().getPropagator());
+            donation.setTakenBy(take);
+            takeRepository.save(take);
         }
         if (donation.getDonor() == null) throw new UserNotDonor();
     }
