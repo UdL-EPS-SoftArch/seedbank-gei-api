@@ -19,18 +19,20 @@ public class DBInitialization {
     private final PropagatorRepository propagatorRepository;
     private final DonationRepository donationRepository;
     private final RequestRepository requestRepository;
+    private final SeedRepository seedRepository;
     @Value("${default-password}")
     String defaultPassword;
     @Value("${spring.profiles.active:test}") // if profile is not set, use test
     private String activeProfiles;
 
-    public DBInitialization(UserRepository userRepository, DonorRepository donorRepository, TakeRepository takeRepository, PropagatorRepository propagatorRepository, DonationRepository donationRepository, RequestRepository requestRepository) {
+    public DBInitialization(UserRepository userRepository, DonorRepository donorRepository, TakeRepository takeRepository, PropagatorRepository propagatorRepository, DonationRepository donationRepository, RequestRepository requestRepository, SeedRepository seedRepository) {
         this.userRepository = userRepository;
         this.donorRepository = donorRepository;
         this.takeRepository = takeRepository;
         this.propagatorRepository = propagatorRepository;
         this.donationRepository = donationRepository;
         this.requestRepository = requestRepository;
+        this.seedRepository = seedRepository;
     }
 
     @PostConstruct
@@ -113,6 +115,12 @@ public class DBInitialization {
             // Default request
             var request = RequestMother.getValidRequestFor(propagator, take);
             requestRepository.save(request);
+
+            // Some seeds
+            var seed1 = SeedMother.getValidSeedWith("seed1", "Seed1", "seeD1");
+            var seed2 = SeedMother.getValidSeedWith("seed2", seed1);
+            seedRepository.save(seed1);
+            seedRepository.save(seed2);
         }
     }
 

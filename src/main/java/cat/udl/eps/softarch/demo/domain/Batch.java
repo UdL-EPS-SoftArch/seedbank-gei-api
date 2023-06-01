@@ -1,13 +1,11 @@
 package cat.udl.eps.softarch.demo.domain;
 
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -38,5 +36,8 @@ public class Batch extends UriEntity<Long> {
 
     private ZonedDateTime date = ZonedDateTime.now();
 
+    @ManyToOne
+    @JsonIdentityReference(alwaysAsId = true)
+    private Seed of;
 
 }
