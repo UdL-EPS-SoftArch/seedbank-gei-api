@@ -41,3 +41,10 @@ Feature: Create a Donation
     Then The response code is 201
     And There is 1 donation created
 
+  Scenario: Create a new Donation with an existing Request
+    Given I can login with username "user" and password "password"
+    Given There is not taken request created
+    And The response code is 200
+    And User "user" is the donor
+    When Donor creates the donation from the request
+    Then Take is automatically created

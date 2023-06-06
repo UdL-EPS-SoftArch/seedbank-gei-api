@@ -2,14 +2,17 @@ package cat.udl.eps.softarch.demo.steps;
 
 import cat.udl.eps.softarch.demo.domain.Donation;
 import cat.udl.eps.softarch.demo.domain.Donor;
+import cat.udl.eps.softarch.demo.domain.Request;
 import cat.udl.eps.softarch.demo.domain.Take;
 import cat.udl.eps.softarch.demo.mothers.DonationMother;
 import cat.udl.eps.softarch.demo.mothers.TakeMother;
 import cat.udl.eps.softarch.demo.repository.DonationRepository;
 import cat.udl.eps.softarch.demo.repository.DonorRepository;
+import cat.udl.eps.softarch.demo.repository.RequestRepository;
 import cat.udl.eps.softarch.demo.repository.TakeRepository;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.But;
+import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +36,9 @@ public class DonationStepDefs {
 
     @Autowired
     private DonorRepository donorRepository;
+
+    @Autowired
+    private RequestRepository requestRepository;
 
     private Take take;
 
@@ -63,6 +69,27 @@ public class DonationStepDefs {
                 .content(stepDefs.mapper.writeValueAsString(donation))
                 .accept(MediaType.APPLICATION_JSON)
                 .with(AuthenticationStepDefs.authenticate())).andDo(print());
+    }
+
+    @When("Donor creates the donation from the request")
+    public void createDonationFromRequest() throws Exception {
+        donation = DonationMother.getValidDonationFor(donor, null);
+        Request request = requestRepository.findAll().iterator().next();
+        donation.setTarget(request);
+        stepDefs.result = stepDefs.mockMvc.perform(post("/donations")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .characterEncoding("utf-8")
+                .content(stepDefs.mapper.writeValueAsString(donation))
+                .accept(MediaType.APPLICATION_JSON)
+                .with(AuthenticationStepDefs.authenticate())).andDo(print());
+    }
+
+    @Then("Take is automatically created")
+    public void takeIsAutomaticallyCreated() {
+        Take take = takeRepository.findAll().iterator().next();
+        Request request = requestRepository.findAll().iterator().next();
+        assertEquals(take.getAmount(), request.getAmount());
+        assertEquals(take.getWeight(), request.getWeight());
     }
 
     @But("There is no Donor")
