@@ -8,12 +8,12 @@ import cat.udl.eps.softarch.demo.mothers.RequestMother;
 import cat.udl.eps.softarch.demo.repository.PropagatorRepository;
 import cat.udl.eps.softarch.demo.repository.RequestRepository;
 import cat.udl.eps.softarch.demo.repository.TakeRepository;
-import io.cucumber.java.en.And;
-import io.cucumber.java.en.But;
-import io.cucumber.java.en.When;
+import io.cucumber.java.en.*;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+
+import java.math.BigDecimal;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -145,5 +145,21 @@ public class RequestStepDefs {
     @And("The response contains {int} requests")
     public void theResponseContainsRequests(int numRequests) throws Exception {
         stepDefs.result.andExpect(jsonPath("$._embedded.requests", hasSize(numRequests)));
+    }
+
+    @Given("There is not taken request created")
+    public void thereIsNotTakenRequestCreated() {
+        Request request = new Request();
+        request.setAmount(1);
+        request.setWeight(BigDecimal.ONE);
+        request.setLocation("Binéfar");
+        request.setFulfilledBy(null);
+        Propagator propagator = new Propagator();
+        propagator.setUsername("Juan");
+        propagator.setPassword("password");
+        propagator.setEmail("juan@juan.com");
+        propagatorRepository.save(propagator);
+        request.setPropagator(propagator);
+        requestRepository.save(request);
     }
 }
