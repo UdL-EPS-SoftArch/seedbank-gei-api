@@ -11,6 +11,6 @@ import java.util.Optional;
 @RepositoryRestResource
 public interface SeedRepository extends PagingAndSortingRepository<Seed, Long> {
     Optional<Seed> findByScientificName(@Param("scientificName") String scientificName);
-    List<Seed> findByScientificNameAsList(@Param("text") String text);
-    
+    List<Seed> findByScientificNameContaining(@Param("text") String text);
+
 }
